@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.340">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Michał Wypych">
+<meta name="dcterms.date" content="2023-05-23">
+
+<title>home - Make a game in R - shiny [part 2]</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">home</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../portfolio.html" rel="" target="">
+ <span class="menu-text">Portfolio</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../research.html" rel="" target="">
+ <span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching.html" rel="" target="">
+ <span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/mic-wypych" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/michal_wypych" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://fosstodon.org/@michal_wypych" rel="" target=""><i class="bi bi-mastodon" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Make a game in R - shiny [part 2]</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">apps</div>
+                <div class="quarto-category">games</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Michał Wypych </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 23, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#brief-overview-of-shiny" id="toc-brief-overview-of-shiny" class="nav-link active" data-scroll-target="#brief-overview-of-shiny">Brief overview of shiny</a></li>
+  <li><a href="#roadmap" id="toc-roadmap" class="nav-link" data-scroll-target="#roadmap">Roadmap</a></li>
+  <li><a href="#building-the-ui" id="toc-building-the-ui" class="nav-link" data-scroll-target="#building-the-ui">Building the ui</a></li>
+  <li><a href="#building-the-server-side" id="toc-building-the-server-side" class="nav-link" data-scroll-target="#building-the-server-side">Building the server side</a>
+  <ul class="collapse">
+  <li><a href="#the-server-side" id="toc-the-server-side" class="nav-link" data-scroll-target="#the-server-side">The server side</a></li>
+  <li><a href="#adjusting-internal-functions" id="toc-adjusting-internal-functions" class="nav-link" data-scroll-target="#adjusting-internal-functions">Adjusting internal functions</a></li>
+  </ul></li>
+  <li><a href="#styling-the-app" id="toc-styling-the-app" class="nav-link" data-scroll-target="#styling-the-app">Styling the app</a></li>
+  <li><a href="#final-tweaks" id="toc-final-tweaks" class="nav-link" data-scroll-target="#final-tweaks">Final tweaks</a></li>
+  <li><a href="#launching-the-app" id="toc-launching-the-app" class="nav-link" data-scroll-target="#launching-the-app">Launching the app</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<p>As you may recall in the previous <a href="../first-game/index.html">post</a> we’ve built a simple game in R that is about finding a treasure by following some clues. The game works fine in the R console but it does not look good. In this post I want to focus on messing with the ui - lets put the game into a shiny app!</p>
+<section id="brief-overview-of-shiny" class="level2">
+<h2 class="anchored" data-anchor-id="brief-overview-of-shiny">Brief overview of shiny</h2>
+<p>I won’t go into details about <code>shiny</code> in this post because it would take way too long (if you want to you can go <a href="https://mastering-shiny.org/">here</a>). The general idea behind making interactive web apps with shiny is to split them into 2 components: user interface (UI) and the server. UI is the part that controls how things are displayed. The server side is where all calculations happen. We will generally follow this logic with one exception: we’ll keep all the big and important functions for the game in a separate file so that the app file contains only the shiny stuff. we’ll also be using the <code>shinyalert</code> package for rendering messages.</p>
+</section>
+<section id="roadmap" class="level2">
+<h2 class="anchored" data-anchor-id="roadmap">Roadmap</h2>
+<p>In order to transfer our game into a shiny app we’ll have to build 2 things: the interface of the app (ui) and the server side. In the ui we’ll need:</p>
+<ol type="1">
+<li><p>some inputs to define the game parameters (number of rows, columns and walls) and a button to launch the game</p></li>
+<li><p>buttons to define movements</p></li>
+<li><p>some decent-looking way to display the game grid.</p></li>
+<li><p>We’ll also have to put the clues ( ‘hotter’, ‘colder’), a welcome and winning message.</p></li>
+</ol>
+<p>The server side will need a few things as well. We’ll need to tinker with our game functions to make it launch with given parameters when the start button is pressed and then to listen to the user making each move and update the game grid accordingly. We’ll also need to generate clues so that they are displayed properly in the ui and some flashy way to end the game.</p>
+<p>Once we have these things we should be able to launch and play the game!</p>
+</section>
+<section id="building-the-ui" class="level2">
+<h2 class="anchored" data-anchor-id="building-the-ui">Building the ui</h2>
+<p>Lets start with building the ui for our game. We’ll start by defining the title panel and the layout. We’ll use sidebar to manage the inputs and leave plenty of space for the game grid.</p>
+<div class="cell">
+<details>
+<summary>UI structure</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shinyalert)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define UI</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Application title</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">titlePanel</span>(<span class="st">"Hot and cold"</span>),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">#define sidebar layout</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sidebarLayout</span>(</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="co">#all our inputs and play button will go into the sidebarPanel</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sidebarPanel</span>(),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="co">#the game grid and movement buttons will be in the main panel</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mainPanel</span>()</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Ok, we have the general layout, lets fill it with some inputs! We need 3 inputs: number of rows, columns and walls plus a button that will initialize the game. <code>NumericInput()</code> will definitely do the job and we don’t need anything more fancy here. Each numeric input needs an id that will later be referenced in the server side to retrieve its value, a label to display and a set of values: range + a default value to display. I’ve set the possible range for rows and columns from 2 to 20. More than 20 would probably make the game difficult to play on a computer screen because the cells would be really tiny. The limit for walls is from 1 to 100 (though you can set a different one). Buttons are created with <code>actionButton()</code> which also need an id and a label. I added an additional class which will make styling it easier.</p>
+<div class="cell">
+<details>
+<summary>UI with inputs</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shinyalert)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Application title</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">titlePanel</span>(<span class="st">"Hot and cold"</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sidebarLayout</span>(</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sidebarPanel</span>(</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">numericInput</span>(<span class="st">"nrow"</span>, <span class="st">"Number of rows"</span>, <span class="at">value =</span> <span class="dv">5</span>, <span class="at">min =</span> <span class="dv">2</span>, <span class="at">max =</span> <span class="dv">20</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">numericInput</span>(<span class="st">"ncol"</span>, <span class="st">"Number of columns"</span>, <span class="at">value =</span> <span class="dv">5</span>, <span class="at">min =</span> <span class="dv">2</span>, <span class="at">max =</span> <span class="dv">20</span>),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">numericInput</span>(<span class="st">"walls"</span>, <span class="st">"Number of walls"</span>, <span class="at">value =</span> <span class="dv">1</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="dv">100</span>),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">actionButton</span>(<span class="st">"play"</span>, <span class="st">"PLAY!"</span>, <span class="at">class =</span> <span class="st">"btn-lg btn-success"</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mainPanel</span>()</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    )    </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now, on to the main panel. We’ll need to put the game grid in it. We can render it as a table with <code>tableOutput()</code> (don’t worry it does not look great for now, we’ll make it prettier soon). We’ll also need to define buttons for moving in each directions. For each button we can use the same function as for the play button, just with different ids and labels. One additional thing to note is that we are using <code>fluidRow()</code> for the buttons. This way the buttons will be displayed below the table.</p>
+<div class="cell">
+<details>
+<summary>UI with inputs and outputs</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shinyalert)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Application title</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">titlePanel</span>(<span class="st">"Hot and cold"</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sidebarLayout</span>(</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      <span class="co">#trying to wrap in a div to set background color for sideb</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sidebarPanel</span>(<span class="at">id=</span><span class="st">"sidebar"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">numericInput</span>(<span class="st">"nrow"</span>, <span class="st">"Number of rows"</span>, <span class="at">value =</span> <span class="dv">5</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="dv">20</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">numericInput</span>(<span class="st">"ncol"</span>, <span class="st">"Number of columns"</span>, <span class="at">value =</span> <span class="dv">5</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="dv">20</span>),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">numericInput</span>(<span class="st">"walls"</span>, <span class="st">"Number of walls"</span>, <span class="at">value =</span> <span class="dv">1</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="dv">50</span>),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">actionButton</span>(<span class="st">"play"</span>, <span class="st">"PLAY!"</span>, <span class="at">class =</span> <span class="st">"btn-lg btn-success"</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mainPanel</span>(</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>          <span class="fu">tableOutput</span>(<span class="st">"matrix"</span>),</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">fluidRow</span>(</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>          <span class="fu">actionButton</span>(<span class="st">"left"</span>, <span class="st">"LEFT"</span>, <span class="at">class =</span> <span class="st">"btn-lg btn-success"</span>),</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>          <span class="fu">actionButton</span>(<span class="st">"up"</span>, <span class="st">"UP"</span>, <span class="at">class =</span> <span class="st">"btn-lg btn-success"</span>),</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>          <span class="fu">actionButton</span>(<span class="st">"down"</span>, <span class="st">"DOWN"</span>, <span class="at">class =</span> <span class="st">"btn-lg btn-success"</span>),</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>          <span class="fu">actionButton</span>(<span class="st">"right"</span>, <span class="st">"RIGHT"</span>, <span class="at">class =</span> <span class="st">"btn-lg btn-success"</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    )    </span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now we have the general ui for the game ready. We’ll add a few things later to make it look better but for now we can leave it as it is. We can move on to the server side.</p>
+</section>
+<section id="building-the-server-side" class="level2">
+<h2 class="anchored" data-anchor-id="building-the-server-side">Building the server side</h2>
+<p>When adjusting the server side of the game we need to make two things. First, we need to define the <code>server()</code> function for the app. Second, we need to adjust our functions of the <code>hot_and_cold()</code> game. In order to make things cleaner I keep all the game functions in an additional file <code>app_functions.R</code> and <code>source()</code> them at the top of the app script. It makes the script less cluttered with code and easier to work with because all that is left in the app is the shiny logic. We’ll start with defining the <code>server()</code> function and then make the adjustment in the game functions. For now, what matters is that we’ll have to package the entire state of the game (current coordinates, target coordinates, wall coordinates, number of moves, distance) in a single object (preferably in a list) to return in as a result of the game initiating function.</p>
+<section id="the-server-side" class="level3">
+<h3 class="anchored" data-anchor-id="the-server-side">The server side</h3>
+<p>The general structure of the server side is pretty straightforward. We’ll start by rendering a welcome message that explains the rules of the game. Next we’ll have to create a logic to start the game with proper inputs. Finally we’ll define a logic for each movement which will also check if the game was won and display a winning message. Lets start by defining a welcome message:</p>
+<div class="cell">
+<details>
+<summary>server with welcome message</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Welcome message and rules</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shinyalert</span>(<span class="st">"Welcome"</span>, <span class="st">"This is a hot &amp; cold game</span><span class="sc">\n</span><span class="st">The rules are:</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">             You have to find the treasure. You can move by pressing up, down, left or right. Human icon shows your current position. You cant walk over walls. After each move the game will tell you if you are getting closer (Hot) or further (cold)"</span>, <span class="at">type =</span> <span class="st">"info"</span>, <span class="at">className =</span> <span class="st">"welcome"</span>, <span class="at">animation=</span><span class="cn">TRUE</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now we need to define a logic that will start the game with given inputs. Since the game is initiated when the “play” button is pressed we need to use <code>observeEvent()</code> which listens to the specified button and executes given code if it is pressed. We’ll call our function to initialize the game <code>get_game_grid()</code> and it will take 3 arguments from our inputs. It returns a single list <code>game_state</code> which contains all information about a current state of the game. Next, we’ll render the output matrix (our game grid) with <code>renderTable()</code>. We’ll add one thing to the output to get rid of column names from the matrix.</p>
+<div class="cell">
+<details>
+<summary>server with start button logic</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Welcome message and rules</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shinyalert</span>(<span class="st">"Welcome"</span>, <span class="st">"Hey hi hello! This is a hot &amp; cold game</span><span class="sc">\n</span><span class="st">The rules are:</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="st">             You have to find the treasure. You can move by pressing</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="st">             up, down, left or right. X shows your current position</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="st">             You cant walk over walls which are shown with #</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="st">             after each move the game will tell you if you are getting</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="st">             closer (Hot) or further (cold)"</span>, <span class="at">type =</span> <span class="st">"info"</span>, <span class="at">className =</span> <span class="st">"welcome"</span>, <span class="at">animation=</span><span class="cn">TRUE</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">#initialize game when play pressed</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>play, {</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    game_state <span class="ot">&lt;&lt;-</span> <span class="fu">get_game_grid</span>(input<span class="sc">$</span>nrow, input<span class="sc">$</span>ncol, input<span class="sc">$</span>walls)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    current_coord <span class="ot">&lt;&lt;-</span> game_state<span class="sc">$</span>current_coord</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>matrix <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>      game_grid <span class="ot">&lt;-</span> game_state<span class="sc">$</span>game_grid </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">sanitize.text.function =</span> <span class="cf">function</span>(x) x)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We’ll use a very similar logic to define behavior of movement buttons. Each <code>observeEvent()</code> will listen to one movement button and execute the <code>make_move()</code> function with proper arguments when pressed. Next it will render the game grid again, extract the current and target coordinates to check if the game is won and display a winning message if it is.</p>
+<div class="cell">
+<details>
+<summary>server with movement logic</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Welcome message and rules</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shinyalert</span>(<span class="st">"Welcome"</span>, <span class="st">"This is a hot &amp; cold game</span><span class="sc">\n</span><span class="st">The rules are:</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">             You have to find the treasure. You can move by pressing up, down, left or right. Human icon shows your current position. You cant walk over walls. After each move the game will tell you if you are getting closer (Hot) or further (cold)"</span>, <span class="at">type =</span> <span class="st">"info"</span>, <span class="at">className =</span> <span class="st">"welcome"</span>, <span class="at">animation=</span><span class="cn">TRUE</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#initialize game when play pressed</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>play, {</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    game_state <span class="ot">&lt;&lt;-</span> <span class="fu">get_game_grid</span>(input<span class="sc">$</span>nrow, input<span class="sc">$</span>ncol, input<span class="sc">$</span>walls)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    current_coord <span class="ot">&lt;&lt;-</span> game_state<span class="sc">$</span>current_coord</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>matrix <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>      game_grid <span class="ot">&lt;-</span> game_state<span class="sc">$</span>game_grid </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">sanitize.text.function =</span> <span class="cf">function</span>(x) x)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Define movements when buttons are pressed</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>up, {</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    game_state <span class="ot">&lt;&lt;-</span> <span class="fu">make_move</span>(<span class="dv">1</span>,<span class="sc">-</span><span class="dv">1</span>, game_state)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    current_coord <span class="ot">&lt;&lt;-</span>game_state<span class="sc">$</span>current_coord</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    target_coord <span class="ot">&lt;-</span> game_state<span class="sc">$</span>target_coord</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>matrix <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>      game_grid <span class="ot">&lt;-</span> game_state<span class="sc">$</span>game_grid</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">sanitize.text.function =</span> <span class="cf">function</span>(x) x)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ((target_coord[<span class="dv">1</span>] <span class="sc">==</span> current_coord[<span class="dv">1</span>] <span class="sc">&amp;</span> target_coord[<span class="dv">2</span>] <span class="sc">==</span> current_coord[<span class="dv">2</span>])) {</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">shinyalert</span>(<span class="fu">paste0</span>(<span class="st">"Congratulations!</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="st">                      You found the treasure in"</span>, game_state<span class="sc">$</span>n_moves, <span class="st">' moves'</span>),<span class="at">type =</span> <span class="st">"success"</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now we just need to create <code>observeEvent()</code> for each button with proper arguments in the <code>make_move()</code> function. The final version of the server side will look like this:</p>
+<div class="cell">
+<details>
+<summary>full server function</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Welcome message and rules</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shinyalert</span>(<span class="st">"Welcome"</span>, <span class="st">"This is a hot &amp; cold game</span><span class="sc">\n</span><span class="st">The rules are:</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="st">             You have to find the treasure. You can move by pressing up, down, left or right. Human icon shows your current position. You cant walk over walls. After each move the game will tell you if you are getting closer (Hot) or further (cold)"</span>, <span class="at">type =</span> <span class="st">"info"</span>, <span class="at">className =</span> <span class="st">"welcome"</span>, <span class="at">animation=</span><span class="cn">TRUE</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#initialize game when play pressed</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>play, {</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    game_state <span class="ot">&lt;&lt;-</span> <span class="fu">get_game_grid</span>(input<span class="sc">$</span>nrow, input<span class="sc">$</span>ncol, input<span class="sc">$</span>walls)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    current_coord <span class="ot">&lt;&lt;-</span> game_state<span class="sc">$</span>current_coord</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>matrix <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>      game_grid <span class="ot">&lt;-</span> game_state<span class="sc">$</span>game_grid </span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">sanitize.text.function =</span> <span class="cf">function</span>(x) x)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Define movements when buttons are pressed</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>up, {</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    game_state <span class="ot">&lt;&lt;-</span> <span class="fu">make_move</span>(<span class="dv">1</span>,<span class="sc">-</span><span class="dv">1</span>, game_state)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    current_coord <span class="ot">&lt;&lt;-</span>game_state<span class="sc">$</span>current_coord</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    target_coord <span class="ot">&lt;-</span> game_state<span class="sc">$</span>target_coord</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>matrix <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>      game_grid <span class="ot">&lt;-</span> game_state<span class="sc">$</span>game_grid</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">sanitize.text.function =</span> <span class="cf">function</span>(x) x)</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ((target_coord[<span class="dv">1</span>] <span class="sc">==</span> current_coord[<span class="dv">1</span>] <span class="sc">&amp;</span> target_coord[<span class="dv">2</span>] <span class="sc">==</span> current_coord[<span class="dv">2</span>])) {</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">shinyalert</span>(<span class="fu">paste0</span>(<span class="st">"Congratulations!</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="st">                      You found the treasure in"</span>, game_state<span class="sc">$</span>n_moves, <span class="st">' moves'</span>),<span class="at">type =</span> <span class="st">"success"</span>)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>down, {</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    game_state <span class="ot">&lt;&lt;-</span> <span class="fu">make_move</span>(<span class="dv">1</span>,<span class="dv">1</span>, game_state)</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    current_coord <span class="ot">&lt;&lt;-</span> game_state<span class="sc">$</span>current_coord</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    target_coord <span class="ot">&lt;-</span> game_state<span class="sc">$</span>target_coord</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>matrix <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>      game_state<span class="sc">$</span>game_grid</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">sanitize.text.function =</span> <span class="cf">function</span>(x) x)</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ((target_coord[<span class="dv">1</span>] <span class="sc">==</span> current_coord[<span class="dv">1</span>] <span class="sc">&amp;</span> target_coord[<span class="dv">2</span>] <span class="sc">==</span> current_coord[<span class="dv">2</span>])) {</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>      <span class="fu">shinyalert</span>(<span class="fu">paste0</span>(<span class="st">"Congratulations!</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="st">                      You found the treasure in"</span>, game_state<span class="sc">$</span>n_moves, <span class="st">' moves'</span>),<span class="at">type =</span> <span class="st">"success"</span>)</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>right, {</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>    game_state <span class="ot">&lt;&lt;-</span> <span class="fu">make_move</span>(<span class="dv">2</span>,<span class="dv">1</span>, game_state)</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    current_coord <span class="ot">&lt;&lt;-</span>game_state<span class="sc">$</span>current_coord</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>    target_coord <span class="ot">&lt;-</span> game_state<span class="sc">$</span>target_coord</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>matrix <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>      game_state<span class="sc">$</span>game_grid</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">sanitize.text.function =</span> <span class="cf">function</span>(x) x)</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ((target_coord[<span class="dv">1</span>] <span class="sc">==</span> current_coord[<span class="dv">1</span>] <span class="sc">&amp;</span> target_coord[<span class="dv">2</span>] <span class="sc">==</span> current_coord[<span class="dv">2</span>])) {</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>      <span class="fu">shinyalert</span>(<span class="fu">paste0</span>(<span class="st">"Congratulations!</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="st">                      You found the treasure in"</span>, game_state<span class="sc">$</span>n_moves, <span class="st">' moves'</span>),<span class="at">type =</span> <span class="st">"success"</span>)</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>left, {</span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>    game_state <span class="ot">&lt;&lt;-</span> <span class="fu">make_move</span>(<span class="dv">2</span>,<span class="sc">-</span><span class="dv">1</span>, game_state)</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>    current_coord <span class="ot">&lt;&lt;-</span>game_state<span class="sc">$</span>current_coord</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>    target_coord <span class="ot">&lt;-</span> game_state<span class="sc">$</span>target_coord</span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>matrix <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({</span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>      game_state<span class="sc">$</span>game_grid</span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">sanitize.text.function =</span> <span class="cf">function</span>(x) x)</span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ((target_coord[<span class="dv">1</span>] <span class="sc">==</span> current_coord[<span class="dv">1</span>] <span class="sc">&amp;</span> target_coord[<span class="dv">2</span>] <span class="sc">==</span> current_coord[<span class="dv">2</span>])) {</span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>      <span class="fu">shinyalert</span>(<span class="fu">paste0</span>(<span class="st">"Congratulations!</span></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a><span class="st">                      You found the treasure in "</span>, game_state<span class="sc">$</span>n_moves, <span class="st">' moves'</span>), <span class="at">type =</span> <span class="st">"success"</span>)</span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="adjusting-internal-functions" class="level3">
+<h3 class="anchored" data-anchor-id="adjusting-internal-functions">Adjusting internal functions</h3>
+<p>We need to split the game function into 2: one to initialize the game and a second function for making a move. This way one function will be called when the player presses the “play” button and another function will be called when the player makes a move. We’ll also need 3 additional files in a www folder to use in the game grid. We’ll call the function that initializes the game <code>get_game_grid()</code>. It should include all the stuff from our earlier game function until the initial game grid is drawn (so it defines the grid, creates starting, target and wall coordinates, performs necessary checks, calculates distance and initiates move counter). We need to make 2 changes to the function:</p>
+<ul>
+<li><p>we want to return a whole list to keep the entire state of the game in one object that can then be passed as a single argument to the movement function. It’ll look like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>result_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">nrow =</span> nrow, <span class="at">ncol =</span> ncol, <span class="at">game_grid =</span> game_grid, </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">start_coord =</span> start_coord, <span class="at">target_coord =</span> target_coord,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">current_coord =</span> current_coord, <span class="at">walls_coords=</span> walls_coords,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">old_distance =</span> old_distance, <span class="at">new_distance =</span> old_distance, <span class="at">n_moves =</span>n_moves)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>we can already include images instead of our <code>X</code>, <code>-</code> and <code>#</code> to make the grid look a little better. For now I quickly created simple graphics: <code>player2.png</code>, <code>cell.png</code> and <code>wall.png</code> in the www folder which we create in our project directory. I created mine in paint, no need to get fancier here (though you can if you want to!). You can find the exact images I used in the github <a href="https://github.com/Honestiore/shiny_game">repo</a> of the app. We’ll keep all the checks and initial definitions with the original symbols just for the ease of use and rather include the images just before drawing the game grid which will look something like this:</p>
+<div class="cell">
+<details>
+<summary>images in the game grid</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(debug <span class="sc">==</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    game_grid[target_coord[<span class="dv">1</span>], target_coord[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">'&lt;img src="cell.png" style="display:flex; max-width:50%; height:auto" /&gt;'</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># player icon was adapted from https://commons.wikimedia.org/wiki/File:Running_icon_-_Noun_Project_17825.svg</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># which is listed under Creative Commons 3.0 attribution license.</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Attribution goes to Dillon Arloff, from The Noun Project.</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># The original icon was resized, had colors changed and the three horizontal lines deleted</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  game_grid[start_coord[<span class="dv">1</span>], start_coord[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">'&lt;img src="player2.png" style="display:flex; max-width:50%; height:auto" /&gt;'</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> walls_coords) {</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    game_grid[i[<span class="dv">1</span>],i[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">'&lt;img src="wall.png" style="height:auto; width:auto; display:flex; max-width:50%; height:auto" /&gt;'</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  game_grid[game_grid<span class="sc">==</span><span class="st">"-"</span>] <span class="ot">&lt;-</span> <span class="st">'&lt;img src="cell.png" style="display:flex; max-width:50%; height:auto" /&gt;'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>I also included some styling already that will help us get the grid to fit into the screen. Without it drawing a larger grid would make it larger than the screen and the game would be difficult to play.</p>
+<p>The movement function will be used to make each move. We need to change a few things in the original movement function. First, we need <code>make_move()</code> function to include our earlier arguments that define if we move horizontally and if we add or subtract but now we need to include an additional argument - the game state. The game state is the <code>result_list</code> returned by <code>get_game_grid()</code> (and will also be returned by <code>make_move()</code>). Once we get the game state as argument the first thing we’ll do inside the function is unpack it to single elements that will be easier to work with later. At the end we will also pack everything back into a list and return it. Next, we need to change messages when some check is not passed (e.g.&nbsp;the player tries to walk pout of the grid) into notifications and then return the original game state. To create notifications just use <code>shownotification()</code>. Finally, just like in the <code>get_game_grid()</code> we need to use images instead of symbols in our game grid. The final version of the <code>app_functions.R</code> file is:</p></li>
+</ul>
+<div class="cell">
+<details>
+<summary>full game functions</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>get_game_grid <span class="ot">&lt;-</span> <span class="cf">function</span>(nrow, ncol, n_walls, <span class="at">debug =</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  game_grid <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="st">'-'</span>, nrow<span class="sc">*</span>ncol), <span class="at">nrow =</span> nrow, <span class="at">ncol =</span> ncol)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#2 define target coordinates</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  obj_x <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>nrow, <span class="dv">1</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  obj_y <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>ncol, <span class="dv">1</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  target_coord <span class="ot">&lt;-</span> <span class="fu">c</span>(obj_x, obj_y)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">#3define start coordinates</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  get_start_coord <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    start_x <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>nrow, <span class="dv">1</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    start_y <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>ncol, <span class="dv">1</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    start_coord <span class="ot">&lt;-</span> <span class="fu">c</span>(start_x, start_y)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">#check if start coordinates are not target coordinates</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (target_coord[<span class="dv">1</span>] <span class="sc">==</span> start_coord[<span class="dv">1</span>] <span class="sc">&amp;</span> target_coord[<span class="dv">2</span>] <span class="sc">==</span> start_coord[<span class="dv">2</span>]) {</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">get_start_coord</span>()</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(start_coord)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  start_coord <span class="ot">&lt;-</span> <span class="fu">get_start_coord</span>()</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Create walls</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>  create_walls <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">#define walls</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">#create a grid of all coordinates</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    all_coords <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="dv">1</span><span class="sc">:</span>nrow, <span class="dv">1</span><span class="sc">:</span>ncol)</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    walls <span class="ot">&lt;-</span> <span class="fu">do.call</span>(<span class="st">`</span><span class="at">rbind</span><span class="st">`</span>, <span class="fu">sample</span>(<span class="fu">asplit</span>(all_coords, <span class="dv">1</span>), n_walls))</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    walls_coords <span class="ot">&lt;-</span> <span class="fu">split</span>(walls, <span class="fu">seq</span>(<span class="fu">nrow</span>(walls)))</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(walls_coords)</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>  walls_coords <span class="ot">&lt;-</span> <span class="fu">create_walls</span>()</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Check if start or target coords are not on a wall</span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span>((<span class="fu">list</span>(target_coord) <span class="sc">%in%</span> walls_coords) <span class="sc">|</span> (<span class="fu">list</span>(start_coord) <span class="sc">%in%</span> walls_coords)) {</span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>    walls_coords <span class="ot">&lt;-</span> <span class="fu">create_walls</span>()</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>  <span class="co">#BFS ALGORITHM TO CHECK IF GAME IS WINNABLE</span></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>  is_valid_move <span class="ot">&lt;-</span> <span class="cf">function</span>(row, col, n, p, visited) {</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check if the cell is within the bounds of the matrix</span></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (row <span class="sc">&lt;</span> <span class="dv">1</span> <span class="sc">||</span> row <span class="sc">&gt;</span> n <span class="sc">||</span> col <span class="sc">&lt;</span> <span class="dv">1</span> <span class="sc">||</span> col <span class="sc">&gt;</span> p) {</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="cn">FALSE</span>)</span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check if the cell has already been visited</span></span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (visited[row, col]) {</span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="cn">FALSE</span>)</span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check if the cell is valid (i.e., contains "-", "X", or "T")</span></span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span>(game_grid[row, col] <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"-"</span>, <span class="st">"X"</span>, <span class="st">"T"</span>))) {</span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="cn">FALSE</span>)</span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If all conditions are satisfied, the move is valid</span></span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">TRUE</span>)</span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Define the function to find a path between "X" and "T"</span></span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a>  find_path <span class="ot">&lt;-</span> <span class="cf">function</span>(game_grid) {</span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define the start and end cells</span></span>
+<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>    start_row <span class="ot">&lt;-</span> <span class="fu">which</span>(game_grid <span class="sc">==</span> <span class="st">"X"</span>, <span class="at">arr.ind =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span>]</span>
+<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a>    start_col <span class="ot">&lt;-</span> <span class="fu">which</span>(game_grid <span class="sc">==</span> <span class="st">"X"</span>, <span class="at">arr.ind =</span> <span class="cn">TRUE</span>)[<span class="dv">2</span>]</span>
+<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a>    end_row <span class="ot">&lt;-</span> <span class="fu">which</span>(game_grid <span class="sc">==</span> <span class="st">"T"</span>, <span class="at">arr.ind =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span>]</span>
+<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a>    end_col <span class="ot">&lt;-</span> <span class="fu">which</span>(game_grid <span class="sc">==</span> <span class="st">"T"</span>, <span class="at">arr.ind =</span> <span class="cn">TRUE</span>)[<span class="dv">2</span>]</span>
+<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define the queue and visited matrix</span></span>
+<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a>    queue <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>    visited <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">FALSE</span>, <span class="at">nrow =</span> <span class="fu">nrow</span>(game_grid), <span class="at">ncol =</span> <span class="fu">ncol</span>(game_grid))</span>
+<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add the start cell to the queue</span></span>
+<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a>    queue[[<span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="fu">c</span>(start_row, start_col, <span class="dv">0</span>)</span>
+<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Loop until the queue is empty</span></span>
+<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> (<span class="fu">length</span>(queue) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Get the first cell in the queue</span></span>
+<span id="cb10-86"><a href="#cb10-86" aria-hidden="true" tabindex="-1"></a>      curr_cell <span class="ot">&lt;-</span> <span class="fu">unlist</span>(queue[[<span class="dv">1</span>]])</span>
+<span id="cb10-87"><a href="#cb10-87" aria-hidden="true" tabindex="-1"></a>      curr_row <span class="ot">&lt;-</span> curr_cell[<span class="dv">1</span>]</span>
+<span id="cb10-88"><a href="#cb10-88" aria-hidden="true" tabindex="-1"></a>      curr_col <span class="ot">&lt;-</span> curr_cell[<span class="dv">2</span>]</span>
+<span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a>      curr_dist <span class="ot">&lt;-</span> curr_cell[<span class="dv">3</span>]</span>
+<span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb10-91"><a href="#cb10-91" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Remove the first cell from the queue</span></span>
+<span id="cb10-92"><a href="#cb10-92" aria-hidden="true" tabindex="-1"></a>      queue <span class="ot">&lt;-</span> queue[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb10-93"><a href="#cb10-93" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb10-94"><a href="#cb10-94" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Mark the cell as visited</span></span>
+<span id="cb10-95"><a href="#cb10-95" aria-hidden="true" tabindex="-1"></a>      visited[curr_row, curr_col] <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb10-96"><a href="#cb10-96" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb10-97"><a href="#cb10-97" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Check if the current cell is the end cell</span></span>
+<span id="cb10-98"><a href="#cb10-98" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (curr_row <span class="sc">==</span> end_row <span class="sc">&amp;&amp;</span> curr_col <span class="sc">==</span> end_col) {</span>
+<span id="cb10-99"><a href="#cb10-99" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Return the distance from the start cell to the end cell</span></span>
+<span id="cb10-100"><a href="#cb10-100" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(curr_dist)</span>
+<span id="cb10-101"><a href="#cb10-101" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb10-102"><a href="#cb10-102" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb10-103"><a href="#cb10-103" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Check the neighboring cells</span></span>
+<span id="cb10-104"><a href="#cb10-104" aria-hidden="true" tabindex="-1"></a>      neighbor_cells <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(curr_row <span class="sc">-</span> <span class="dv">1</span>, curr_col), <span class="fu">c</span>(curr_row <span class="sc">+</span> <span class="dv">1</span>, curr_col), </span>
+<span id="cb10-105"><a href="#cb10-105" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">c</span>(curr_row, curr_col <span class="sc">-</span> <span class="dv">1</span>), <span class="fu">c</span>(curr_row, curr_col <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb10-106"><a href="#cb10-106" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> (neighbor_cell <span class="cf">in</span> neighbor_cells) {</span>
+<span id="cb10-107"><a href="#cb10-107" aria-hidden="true" tabindex="-1"></a>        neighbor_row <span class="ot">&lt;-</span> neighbor_cell[<span class="dv">1</span>]</span>
+<span id="cb10-108"><a href="#cb10-108" aria-hidden="true" tabindex="-1"></a>        neighbor_col <span class="ot">&lt;-</span> neighbor_cell[<span class="dv">2</span>]</span>
+<span id="cb10-109"><a href="#cb10-109" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-110"><a href="#cb10-110" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (<span class="fu">is_valid_move</span>(neighbor_row, neighbor_col, <span class="fu">nrow</span>(game_grid), <span class="fu">ncol</span>(game_grid), visited)) {</span>
+<span id="cb10-111"><a href="#cb10-111" aria-hidden="true" tabindex="-1"></a>          <span class="co"># Add the neighboring cell to the queue</span></span>
+<span id="cb10-112"><a href="#cb10-112" aria-hidden="true" tabindex="-1"></a>          queue[[<span class="fu">length</span>(queue) <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="fu">c</span>(neighbor_row, neighbor_col, curr_dist <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb10-113"><a href="#cb10-113" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb10-114"><a href="#cb10-114" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb10-115"><a href="#cb10-115" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-116"><a href="#cb10-116" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-117"><a href="#cb10-117" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If no path is found, return FALSE</span></span>
+<span id="cb10-118"><a href="#cb10-118" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">FALSE</span>)</span>
+<span id="cb10-119"><a href="#cb10-119" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-120"><a href="#cb10-120" aria-hidden="true" tabindex="-1"></a>  <span class="co">#add a check that there exists a path! We'll need the BFS for this</span></span>
+<span id="cb10-121"><a href="#cb10-121" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-122"><a href="#cb10-122" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-123"><a href="#cb10-123" aria-hidden="true" tabindex="-1"></a>  <span class="co">#display the first grid and instructions</span></span>
+<span id="cb10-124"><a href="#cb10-124" aria-hidden="true" tabindex="-1"></a>  <span class="co">#change elements of grid to walls:</span></span>
+<span id="cb10-125"><a href="#cb10-125" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> walls_coords) {</span>
+<span id="cb10-126"><a href="#cb10-126" aria-hidden="true" tabindex="-1"></a>    game_grid[i[<span class="dv">1</span>],i[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">'#'</span></span>
+<span id="cb10-127"><a href="#cb10-127" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-128"><a href="#cb10-128" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-129"><a href="#cb10-129" aria-hidden="true" tabindex="-1"></a>  game_grid[start_coord[<span class="dv">1</span>], start_coord[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">'X'</span></span>
+<span id="cb10-130"><a href="#cb10-130" aria-hidden="true" tabindex="-1"></a>  game_grid[target_coord[<span class="dv">1</span>], target_coord[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">'T'</span></span>
+<span id="cb10-131"><a href="#cb10-131" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-132"><a href="#cb10-132" aria-hidden="true" tabindex="-1"></a>  bfs_result <span class="ot">&lt;-</span> <span class="fu">find_path</span>(game_grid)</span>
+<span id="cb10-133"><a href="#cb10-133" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-134"><a href="#cb10-134" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span>(<span class="sc">!</span>bfs_result <span class="sc">|</span> (<span class="fu">list</span>(target_coord) <span class="sc">%in%</span> walls_coords) <span class="sc">|</span> (<span class="fu">list</span>(start_coord) <span class="sc">%in%</span> walls_coords)) {</span>
+<span id="cb10-135"><a href="#cb10-135" aria-hidden="true" tabindex="-1"></a>    <span class="co">#regenerate walls</span></span>
+<span id="cb10-136"><a href="#cb10-136" aria-hidden="true" tabindex="-1"></a>    walls_coords <span class="ot">&lt;-</span> <span class="fu">create_walls</span>()</span>
+<span id="cb10-137"><a href="#cb10-137" aria-hidden="true" tabindex="-1"></a>    game_grid <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="st">'-'</span>, nrow<span class="sc">*</span>ncol), <span class="at">nrow =</span> nrow, <span class="at">ncol =</span> ncol)</span>
+<span id="cb10-138"><a href="#cb10-138" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> walls_coords) {</span>
+<span id="cb10-139"><a href="#cb10-139" aria-hidden="true" tabindex="-1"></a>      game_grid[i[<span class="dv">1</span>],i[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">'#'</span></span>
+<span id="cb10-140"><a href="#cb10-140" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-141"><a href="#cb10-141" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-142"><a href="#cb10-142" aria-hidden="true" tabindex="-1"></a>    game_grid[start_coord[<span class="dv">1</span>], start_coord[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">'X'</span></span>
+<span id="cb10-143"><a href="#cb10-143" aria-hidden="true" tabindex="-1"></a>    game_grid[target_coord[<span class="dv">1</span>], target_coord[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">'T'</span></span>
+<span id="cb10-144"><a href="#cb10-144" aria-hidden="true" tabindex="-1"></a>    bfs_result <span class="ot">&lt;-</span> <span class="fu">find_path</span>(game_grid)</span>
+<span id="cb10-145"><a href="#cb10-145" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-146"><a href="#cb10-146" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-147"><a href="#cb10-147" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-148"><a href="#cb10-148" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(debug <span class="sc">==</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb10-149"><a href="#cb10-149" aria-hidden="true" tabindex="-1"></a>    game_grid[target_coord[<span class="dv">1</span>], target_coord[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">'&lt;img src="cell.png" style="display:flex; max-width:50%; height:auto" /&gt;'</span></span>
+<span id="cb10-150"><a href="#cb10-150" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-151"><a href="#cb10-151" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-152"><a href="#cb10-152" aria-hidden="true" tabindex="-1"></a>   <span class="co"># player icon was adapted from https://commons.wikimedia.org/wiki/File:Running_icon_-_Noun_Project_17825.svg</span></span>
+<span id="cb10-153"><a href="#cb10-153" aria-hidden="true" tabindex="-1"></a>  <span class="co"># which is listed under Creative Commons 3.0 attribution license.</span></span>
+<span id="cb10-154"><a href="#cb10-154" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Attribution goes to Dillon Arloff, from The Noun Project.</span></span>
+<span id="cb10-155"><a href="#cb10-155" aria-hidden="true" tabindex="-1"></a>  <span class="co"># The original icon was resized, had colors changed and the three horizontal lines deleted</span></span>
+<span id="cb10-156"><a href="#cb10-156" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-157"><a href="#cb10-157" aria-hidden="true" tabindex="-1"></a>  game_grid[start_coord[<span class="dv">1</span>], start_coord[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">'&lt;img src="player2.png" style="display:flex; max-width:50%; height:auto" /&gt;'</span></span>
+<span id="cb10-158"><a href="#cb10-158" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-159"><a href="#cb10-159" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-160"><a href="#cb10-160" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> walls_coords) {</span>
+<span id="cb10-161"><a href="#cb10-161" aria-hidden="true" tabindex="-1"></a>    game_grid[i[<span class="dv">1</span>],i[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">'&lt;img src="wall.png" style="height:auto; width:auto; display:flex; max-width:50%; height:auto" /&gt;'</span></span>
+<span id="cb10-162"><a href="#cb10-162" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-163"><a href="#cb10-163" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-164"><a href="#cb10-164" aria-hidden="true" tabindex="-1"></a>  game_grid[game_grid<span class="sc">==</span><span class="st">"-"</span>] <span class="ot">&lt;-</span> <span class="st">'&lt;img src="cell.png" style="display:flex; max-width:50%; height:auto" /&gt;'</span></span>
+<span id="cb10-165"><a href="#cb10-165" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-166"><a href="#cb10-166" aria-hidden="true" tabindex="-1"></a>  <span class="co">#set current coordinates</span></span>
+<span id="cb10-167"><a href="#cb10-167" aria-hidden="true" tabindex="-1"></a>  current_coord <span class="ot">&lt;-</span> start_coord</span>
+<span id="cb10-168"><a href="#cb10-168" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-169"><a href="#cb10-169" aria-hidden="true" tabindex="-1"></a>  <span class="co">#calculate distance as Manhattan</span></span>
+<span id="cb10-170"><a href="#cb10-170" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-171"><a href="#cb10-171" aria-hidden="true" tabindex="-1"></a>  old_distance <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">abs</span>(target_coord[<span class="dv">1</span>] <span class="sc">-</span> current_coord[<span class="dv">1</span>]),<span class="fu">abs</span>(target_coord[<span class="dv">2</span>] <span class="sc">-</span> current_coord[<span class="dv">2</span>]))</span>
+<span id="cb10-172"><a href="#cb10-172" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-173"><a href="#cb10-173" aria-hidden="true" tabindex="-1"></a>  <span class="co">#initiate move counter</span></span>
+<span id="cb10-174"><a href="#cb10-174" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-175"><a href="#cb10-175" aria-hidden="true" tabindex="-1"></a>  n_moves <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb10-176"><a href="#cb10-176" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-177"><a href="#cb10-177" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-178"><a href="#cb10-178" aria-hidden="true" tabindex="-1"></a>  result_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">nrow =</span> nrow, <span class="at">ncol =</span> ncol, <span class="at">game_grid =</span> game_grid, <span class="at">start_coord =</span> start_coord, <span class="at">target_coord =</span> target_coord,</span>
+<span id="cb10-179"><a href="#cb10-179" aria-hidden="true" tabindex="-1"></a>                      <span class="at">current_coord =</span> current_coord, <span class="at">walls_coords=</span> walls_coords, <span class="at">old_distance =</span> old_distance, <span class="at">new_distance =</span> old_distance,</span>
+<span id="cb10-180"><a href="#cb10-180" aria-hidden="true" tabindex="-1"></a>                      <span class="at">n_moves =</span>n_moves)</span>
+<span id="cb10-181"><a href="#cb10-181" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-182"><a href="#cb10-182" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result_list)</span>
+<span id="cb10-183"><a href="#cb10-183" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-184"><a href="#cb10-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-185"><a href="#cb10-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-186"><a href="#cb10-186" aria-hidden="true" tabindex="-1"></a>make_move <span class="ot">&lt;-</span> <span class="cf">function</span>(h, add, game_state) {</span>
+<span id="cb10-187"><a href="#cb10-187" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-188"><a href="#cb10-188" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-189"><a href="#cb10-189" aria-hidden="true" tabindex="-1"></a>  <span class="co">#unpack game state</span></span>
+<span id="cb10-190"><a href="#cb10-190" aria-hidden="true" tabindex="-1"></a>  nrow <span class="ot">&lt;-</span> game_state<span class="sc">$</span>nrow</span>
+<span id="cb10-191"><a href="#cb10-191" aria-hidden="true" tabindex="-1"></a>  ncol <span class="ot">&lt;-</span> game_state<span class="sc">$</span>ncol</span>
+<span id="cb10-192"><a href="#cb10-192" aria-hidden="true" tabindex="-1"></a>  start_coord <span class="ot">&lt;-</span> game_state<span class="sc">$</span>start_coord</span>
+<span id="cb10-193"><a href="#cb10-193" aria-hidden="true" tabindex="-1"></a>  target_coord <span class="ot">&lt;-</span> game_state<span class="sc">$</span>target_coord</span>
+<span id="cb10-194"><a href="#cb10-194" aria-hidden="true" tabindex="-1"></a>  current_coord <span class="ot">&lt;-</span> game_state<span class="sc">$</span>current_coord</span>
+<span id="cb10-195"><a href="#cb10-195" aria-hidden="true" tabindex="-1"></a>  old_distance <span class="ot">&lt;-</span> game_state<span class="sc">$</span>old_distance</span>
+<span id="cb10-196"><a href="#cb10-196" aria-hidden="true" tabindex="-1"></a>  new_distance <span class="ot">&lt;-</span> game_state<span class="sc">$</span>new_distance</span>
+<span id="cb10-197"><a href="#cb10-197" aria-hidden="true" tabindex="-1"></a>  walls_coords <span class="ot">&lt;-</span> game_state<span class="sc">$</span>walls_coords</span>
+<span id="cb10-198"><a href="#cb10-198" aria-hidden="true" tabindex="-1"></a>  n_moves <span class="ot">&lt;-</span> game_state<span class="sc">$</span>n_moves</span>
+<span id="cb10-199"><a href="#cb10-199" aria-hidden="true" tabindex="-1"></a>  game_grid <span class="ot">&lt;-</span> game_state<span class="sc">$</span>game_grid</span>
+<span id="cb10-200"><a href="#cb10-200" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-201"><a href="#cb10-201" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-202"><a href="#cb10-202" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (h <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> add <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb10-203"><a href="#cb10-203" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (current_coord[h] <span class="sc">+</span> add <span class="sc">&gt;</span> nrow) {</span>
+<span id="cb10-204"><a href="#cb10-204" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showNotification</span>(<span class="st">'You cant move there!'</span>)</span>
+<span id="cb10-205"><a href="#cb10-205" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(game_state) <span class="co"># this will force R to move to the next iteration of the loop</span></span>
+<span id="cb10-206"><a href="#cb10-206" aria-hidden="true" tabindex="-1"></a>    } </span>
+<span id="cb10-207"><a href="#cb10-207" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">list</span>(<span class="fu">as.integer</span>(<span class="fu">c</span>(current_coord[<span class="dv">1</span>]<span class="sc">+</span> add,current_coord[<span class="dv">2</span>] ))) <span class="sc">%in%</span> walls_coords) {</span>
+<span id="cb10-208"><a href="#cb10-208" aria-hidden="true" tabindex="-1"></a>      <span class="co">#check if you walk on a wall</span></span>
+<span id="cb10-209"><a href="#cb10-209" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showNotification</span>(<span class="st">'You cant move there!'</span>)</span>
+<span id="cb10-210"><a href="#cb10-210" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(game_state)</span>
+<span id="cb10-211"><a href="#cb10-211" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-212"><a href="#cb10-212" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (h <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> add<span class="sc">==-</span><span class="dv">1</span>) {</span>
+<span id="cb10-213"><a href="#cb10-213" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (current_coord[h] <span class="sc">+</span> add <span class="sc">&lt;</span> <span class="dv">1</span>) {</span>
+<span id="cb10-214"><a href="#cb10-214" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showNotification</span>(<span class="st">'You cant move there!'</span>)</span>
+<span id="cb10-215"><a href="#cb10-215" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(game_state) <span class="co"># this will force R to move to the next iteration of the loop</span></span>
+<span id="cb10-216"><a href="#cb10-216" aria-hidden="true" tabindex="-1"></a>    } </span>
+<span id="cb10-217"><a href="#cb10-217" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">list</span>(<span class="fu">as.integer</span>(<span class="fu">c</span>(current_coord[<span class="dv">1</span>] <span class="sc">+</span> add,current_coord[<span class="dv">2</span>]))) <span class="sc">%in%</span> walls_coords) {</span>
+<span id="cb10-218"><a href="#cb10-218" aria-hidden="true" tabindex="-1"></a>      <span class="co">#check if you walk on a wall</span></span>
+<span id="cb10-219"><a href="#cb10-219" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showNotification</span>(<span class="st">'You cant move there!'</span>)</span>
+<span id="cb10-220"><a href="#cb10-220" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(game_state)</span>
+<span id="cb10-221"><a href="#cb10-221" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-222"><a href="#cb10-222" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-223"><a href="#cb10-223" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (h <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;</span> add<span class="sc">==</span><span class="dv">1</span>) {</span>
+<span id="cb10-224"><a href="#cb10-224" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (current_coord[h] <span class="sc">+</span> add <span class="sc">&gt;</span> ncol) {</span>
+<span id="cb10-225"><a href="#cb10-225" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showNotification</span>(<span class="st">'You cant move there!'</span>)</span>
+<span id="cb10-226"><a href="#cb10-226" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(game_state) <span class="co"># this will force R to move to the next iteration of the loop</span></span>
+<span id="cb10-227"><a href="#cb10-227" aria-hidden="true" tabindex="-1"></a>    } </span>
+<span id="cb10-228"><a href="#cb10-228" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">list</span>(<span class="fu">as.integer</span>(<span class="fu">c</span>(current_coord[<span class="dv">1</span>],current_coord[<span class="dv">2</span>]<span class="sc">+</span> add))) <span class="sc">%in%</span> walls_coords) {</span>
+<span id="cb10-229"><a href="#cb10-229" aria-hidden="true" tabindex="-1"></a>      <span class="co">#check if you walk on a wall</span></span>
+<span id="cb10-230"><a href="#cb10-230" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showNotification</span>(<span class="st">'You cant move there!'</span>)</span>
+<span id="cb10-231"><a href="#cb10-231" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(game_state)</span>
+<span id="cb10-232"><a href="#cb10-232" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-233"><a href="#cb10-233" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-234"><a href="#cb10-234" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (h <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;</span> add<span class="sc">==-</span><span class="dv">1</span>) {</span>
+<span id="cb10-235"><a href="#cb10-235" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (current_coord[h] <span class="sc">+</span> add <span class="sc">&lt;</span> <span class="dv">1</span>) {</span>
+<span id="cb10-236"><a href="#cb10-236" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showNotification</span>(<span class="st">'You cant move there!'</span>)</span>
+<span id="cb10-237"><a href="#cb10-237" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(game_state) <span class="co"># this will force R to move to the next iteration of the loop</span></span>
+<span id="cb10-238"><a href="#cb10-238" aria-hidden="true" tabindex="-1"></a>    } </span>
+<span id="cb10-239"><a href="#cb10-239" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">list</span>(<span class="fu">as.integer</span>(<span class="fu">c</span>(current_coord[<span class="dv">1</span>] ,current_coord[<span class="dv">2</span>]<span class="sc">+</span> add))) <span class="sc">%in%</span> walls_coords) {</span>
+<span id="cb10-240"><a href="#cb10-240" aria-hidden="true" tabindex="-1"></a>      <span class="co">#check if you walk on a wall</span></span>
+<span id="cb10-241"><a href="#cb10-241" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showNotification</span>(<span class="st">'You cant move there!'</span>)</span>
+<span id="cb10-242"><a href="#cb10-242" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(game_state)</span>
+<span id="cb10-243"><a href="#cb10-243" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-244"><a href="#cb10-244" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-245"><a href="#cb10-245" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-246"><a href="#cb10-246" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-247"><a href="#cb10-247" aria-hidden="true" tabindex="-1"></a>  <span class="co">#update grid and coords</span></span>
+<span id="cb10-248"><a href="#cb10-248" aria-hidden="true" tabindex="-1"></a>  game_grid[current_coord[<span class="dv">1</span>], current_coord[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">'&lt;img src="cell.png" style="display:flex; max-width:30%; height:auto" /&gt;'</span></span>
+<span id="cb10-249"><a href="#cb10-249" aria-hidden="true" tabindex="-1"></a>  current_coord[h] <span class="ot">&lt;-</span> current_coord[h] <span class="sc">+</span> add</span>
+<span id="cb10-250"><a href="#cb10-250" aria-hidden="true" tabindex="-1"></a>  game_grid[current_coord[<span class="dv">1</span>], current_coord[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">'&lt;img src="player2.png" style="display:flex; max-width:30%; height:auto" /&gt;'</span></span>
+<span id="cb10-251"><a href="#cb10-251" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-252"><a href="#cb10-252" aria-hidden="true" tabindex="-1"></a>  <span class="co">#update distance and number of moves</span></span>
+<span id="cb10-253"><a href="#cb10-253" aria-hidden="true" tabindex="-1"></a>  new_distance <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">abs</span>(target_coord[<span class="dv">1</span>] <span class="sc">-</span> current_coord[<span class="dv">1</span>]),<span class="fu">abs</span>(target_coord[<span class="dv">2</span>] <span class="sc">-</span> current_coord[<span class="dv">2</span>]))</span>
+<span id="cb10-254"><a href="#cb10-254" aria-hidden="true" tabindex="-1"></a>  n_moves <span class="ot">&lt;-</span> n_moves <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb10-255"><a href="#cb10-255" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-256"><a href="#cb10-256" aria-hidden="true" tabindex="-1"></a>  <span class="co">#display message</span></span>
+<span id="cb10-257"><a href="#cb10-257" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(new_distance <span class="sc">&lt;</span> old_distance) {</span>
+<span id="cb10-258"><a href="#cb10-258" aria-hidden="true" tabindex="-1"></a>    <span class="fu">showNotification</span>(<span class="st">'Hotter!'</span>, <span class="at">type =</span> <span class="st">'warning'</span>)</span>
+<span id="cb10-259"><a href="#cb10-259" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (new_distance <span class="sc">&gt;</span> old_distance) {</span>
+<span id="cb10-260"><a href="#cb10-260" aria-hidden="true" tabindex="-1"></a>    <span class="fu">showNotification</span>(<span class="st">'Colder!'</span>, <span class="at">type =</span> <span class="st">'error'</span>)</span>
+<span id="cb10-261"><a href="#cb10-261" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-262"><a href="#cb10-262" aria-hidden="true" tabindex="-1"></a>  <span class="co">#update distance</span></span>
+<span id="cb10-263"><a href="#cb10-263" aria-hidden="true" tabindex="-1"></a>  old_distance <span class="ot">&lt;-</span> new_distance</span>
+<span id="cb10-264"><a href="#cb10-264" aria-hidden="true" tabindex="-1"></a>  <span class="co">#print grid and make next move</span></span>
+<span id="cb10-265"><a href="#cb10-265" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-266"><a href="#cb10-266" aria-hidden="true" tabindex="-1"></a>  result_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">nrow =</span> nrow, <span class="at">ncol =</span> ncol, <span class="at">game_grid =</span> game_grid, <span class="at">start_coord =</span> start_coord, <span class="at">target_coord =</span> target_coord,</span>
+<span id="cb10-267"><a href="#cb10-267" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">current_coord =</span> current_coord, <span class="at">old_distance =</span> old_distance, <span class="at">new_distance =</span> old_distance,</span>
+<span id="cb10-268"><a href="#cb10-268" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">n_moves =</span>n_moves, <span class="at">walls_coords =</span> walls_coords)</span>
+<span id="cb10-269"><a href="#cb10-269" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-270"><a href="#cb10-270" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result_list)</span>
+<span id="cb10-271"><a href="#cb10-271" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-272"><a href="#cb10-272" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Just add <code>source(app_functions.R)</code> at the top of the app script to load the game functions.</p>
+</section>
+</section>
+<section id="styling-the-app" class="level2">
+<h2 class="anchored" data-anchor-id="styling-the-app">Styling the app</h2>
+<p>Ok, we have a working version of the game! However, it still does not look great. The last thing we need to do before launching it is to make it look better. We’ll just add a css file that will define some fonts, colors etc. Lets call the file <code>style.css</code> and put it in the project directory but if you want to go really fancy with it you can look for more information <a href="https://unleash-shiny.rinterface.com/index.html">here</a>. To load the style add <code>includeCSS("style.css")</code> inside the <code>fluidPage()</code> in the ui. We’ll start by defining the fonts and general colors. The import statement loads a proper google font. and the <code>*</code> statement defines general colors and font.</p>
+<p>Generally we change the look of 2 other things: all the buttons, notifications and inputs are styled to have the same dark background and the same font. We also defined different color for hovering over the buttons. The notifications were a bit tricky because it was hard to find their css classes (they are defined from <code>.welcome</code> to <code>.shiny-notification</code> in the code below). The other thing we need to change is how the game grid looks like. Recall that it is rendered as a table with images in each cell. The tricky thing is that the table has varying number of rows and columns and we want it to fit the screen and resize all the images to fit the table. We also want to get rid of all the spacing and borders between the cells (we only keep borders around the entire table). The table is defined from <code>table</code> to the end of the code chunk below. Honestly I have very little experience with css and some of the code below may be redundant but it works and it took me so long to get it ok that for now I’m willing to leave it as is.</p>
+<div class="cell">
+<details>
+<summary>css code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="sc">@</span>import <span class="fu">url</span>(<span class="st">'https://fonts.googleapis.com/css?family=Share+Tech+Mono&amp;display=swap'</span>);</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="sc">*</span>{</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  font<span class="sc">-</span>family<span class="sc">:</span> <span class="st">"Share Tech Mono"</span>;</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  color<span class="sc">:</span> <span class="co">#66FF00;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  background<span class="sc">-</span>color<span class="sc">:</span> <span class="co">#001219;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>h2{</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  font<span class="sc">-</span>size<span class="sc">:</span> 5em;</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>body{</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  color<span class="sc">:</span> <span class="co">#66FF00;</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  background<span class="sc">-</span>color<span class="sc">:</span> <span class="co">#001219;</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#sidebar{ </span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  color<span class="sc">:</span> <span class="co">#66FF00;</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  background<span class="sc">-</span>color<span class="sc">:</span> <span class="co">#001219;</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  border<span class="sc">-</span>color<span class="sc">:</span> <span class="co">#66FF00;</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  font<span class="sc">-</span>size<span class="sc">:</span> <span class="fl">2.5</span>em;</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>.form<span class="sc">-</span>control{</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  color<span class="sc">:</span> <span class="co">#66FF00;</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>  background<span class="sc">-</span>color<span class="sc">:</span> <span class="co">#001219;</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  border<span class="sc">-</span>color<span class="sc">:</span> <span class="co">#66FF00;</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>    font<span class="sc">-</span>size<span class="sc">:</span> 1em;</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>.btn{</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>  color<span class="sc">:</span> <span class="co">#66FF00;</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>  background<span class="sc">-</span>color<span class="sc">:</span> <span class="co">#001219;</span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>.btn<span class="sc">:</span>hover{</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>  color<span class="sc">:</span> <span class="co">#66FF00;</span></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>  background<span class="sc">-</span>color<span class="sc">:</span> <span class="co">#264653;</span></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>.welcome{</span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>  color<span class="sc">:</span> <span class="co">#66FF00;</span></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>  background<span class="sc">-</span>color<span class="sc">:</span> <span class="co">#001219;</span></span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>  font<span class="sc">-</span>size<span class="sc">:</span> <span class="fl">1.5</span>em;</span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>.win{</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>  font<span class="sc">-</span>family<span class="sc">:</span> <span class="st">"Share Tech Mono"</span>;</span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>  color<span class="sc">:</span> <span class="co">#66FF00;</span></span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>  background<span class="sc">-</span>color<span class="sc">:</span> <span class="co">#001219;</span></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>  font<span class="sc">-</span>size<span class="sc">:</span> <span class="fl">1.5</span>em;</span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a>.alert{</span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>  color<span class="sc">:</span> <span class="co">#66FF00;</span></span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>  background<span class="sc">-</span>color<span class="sc">:</span> <span class="co">#001219;</span></span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>  <span class="sc">!</span>important;</span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>.confirm{</span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>  color<span class="sc">:</span> <span class="co">#66FF00;</span></span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a>  background<span class="sc">-</span>color<span class="sc">:</span> <span class="co">#001219;</span></span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a>  <span class="sc">!</span>important;</span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a>.shiny<span class="sc">-</span>notification{</span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a>  font<span class="sc">-</span>family<span class="sc">:</span> <span class="st">"Share Tech Mono"</span>;</span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a>  color<span class="sc">:</span> <span class="co">#66FF00;</span></span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a>  background<span class="sc">-</span>color<span class="sc">:</span> <span class="co">#001219;</span></span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a>table{</span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a>  table<span class="sc">-</span>layout<span class="sc">:</span>fixed;</span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a>  height<span class="sc">:</span> <span class="dv">70</span>%;</span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a>  width<span class="sc">:</span> <span class="dv">90</span>%;</span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a>  border<span class="sc">-</span>style<span class="sc">:</span> solid;</span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a>  border<span class="sc">-</span>color<span class="sc">:</span> <span class="co">#66FF00;</span></span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a><span class="co">#matrix td {</span></span>
+<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a>  border<span class="sc">-</span>color<span class="sc">:</span> <span class="co">#66FF00;</span></span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a>  aspect<span class="sc">-</span>ratio<span class="sc">:</span> <span class="dv">1</span> <span class="sc">/</span> <span class="dv">1</span>;</span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a>  max<span class="sc">-</span>height<span class="sc">:</span> <span class="dv">100</span>%;</span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a>  max<span class="sc">-</span>width<span class="sc">:</span> <span class="dv">100</span>%;</span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a>  padding<span class="sc">:</span> 0px; </span>
+<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a>  margin<span class="sc">:</span> 0px; </span>
+<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a>  border<span class="sc">:</span> 0px;</span>
+<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a>  align<span class="sc">-</span>content<span class="sc">:</span> center;</span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
+<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a><span class="co">#matrix th {</span></span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a>  display<span class="sc">:</span> none;</span>
+<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
+<span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-97"><a href="#cb11-97" aria-hidden="true" tabindex="-1"></a>img {</span>
+<span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a>   max<span class="sc">-</span>width<span class="sc">:</span><span class="dv">100</span>%;</span>
+<span id="cb11-99"><a href="#cb11-99" aria-hidden="true" tabindex="-1"></a>   vertical<span class="sc">-</span>align<span class="sc">:</span> bottom;</span>
+<span id="cb11-100"><a href="#cb11-100" aria-hidden="true" tabindex="-1"></a>   height<span class="sc">:</span>auto;</span>
+<span id="cb11-101"><a href="#cb11-101" aria-hidden="true" tabindex="-1"></a>   display<span class="sc">:</span>block;</span>
+<span id="cb11-102"><a href="#cb11-102" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="final-tweaks" class="level2">
+<h2 class="anchored" data-anchor-id="final-tweaks">Final tweaks</h2>
+<p>There are some tweaks you can make to the game if you want at this point. e.g.&nbsp;in the final version I changed Manhattan distance to Euclidean which I think makes the game a bit more difficult. You just need to change how <code>current_distance</code> is calculated.</p>
+</section>
+<section id="launching-the-app" class="level2">
+<h2 class="anchored" data-anchor-id="launching-the-app">Launching the app</h2>
+<p>Ok, now we’re ready to go! You can run the <code>shinyapp(ui,server)</code> function to see your working game!.</p>
+<p>A working version of the game can also be accessed <a href="https://honestiore.shinyapps.io/shiny_game/">here</a>. The code is stored in my github repository <a href="https://github.com/mic-wypych/shiny_game">here</a>.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
