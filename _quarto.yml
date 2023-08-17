@@ -1,0 +1,26 @@
+project:
+  type: website
+
+website:
+  title: "home"
+  navbar:
+    right:
+      - blog.qmd
+      - portfolio.qmd
+      - research.qmd
+      - teaching.qmd
+      - icon: github
+        href: https://github.com/mic-wypych
+      - icon: twitter
+        href: https://twitter.com/michal_wypych
+      - icon: mastodon
+        href: https://fosstodon.org/@michal_wypych
+format:
+  html:
+    theme: theme.scss
+
+editor: visual
+
+execute:
+  freeze: auto
+

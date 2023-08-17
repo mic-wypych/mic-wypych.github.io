@@ -1,0 +1,732 @@
+---
+title: "Make a game in R - shiny [part 2]"
+author: "Michał Wypych"
+date: "2023-05-23"
+categories: [apps, games]
+image: "image.jpg"
+toc: true
+---
+
+As you may recall in the previous [post](../first-game/index.html) we've built a simple game in R that is about finding a treasure by following some clues. The game works fine in the R console but it does not look good. In this post I want to focus on messing with the ui - lets put the game into a shiny app!
+
+## Brief overview of shiny
+
+I won't go into details about `shiny` in this post because it would take way too long (if you want to you can go [here](https://mastering-shiny.org/)). The general idea behind making interactive web apps with shiny is to split them into 2 components: user interface (UI) and the server. UI is the part that controls how things are displayed. The server side is where all calculations happen. We will generally follow this logic with one exception: we'll keep all the big and important functions for the game in a separate file so that the app file contains only the shiny stuff. we'll also be using the `shinyalert` package for rendering messages. If you're interested in making games in shiny there are some great materials by Jesse Mostipak and Barret Schloerke e.g. [here](https://www.youtube.com/watch?v=sD39WAZo99A).
+
+## Roadmap
+
+In order to transfer our game into a shiny app we'll have to build 2 things: the interface of the app (ui) and the server side. In the ui we'll need:
+
+1.  some inputs to define the game parameters (number of rows, columns and walls) and a button to launch the game
+
+2.  buttons to define movements
+
+3.  some decent-looking way to display the game grid.
+
+4.  We'll also have to put the clues ( 'hotter', 'colder'), a welcome and winning message.
+
+The server side will need a few things as well. We'll need to tinker with our game functions to make it launch with given parameters when the start button is pressed and then to listen to the user making each move and update the game grid accordingly. We'll also need to generate clues so that they are displayed properly in the ui and some flashy way to end the game.
+
+Once we have these things we should be able to launch and play the game!
+
+## Building the ui
+
+Lets start with building the ui for our game. We'll start by defining the title panel and the layout. We'll use sidebar to manage the inputs and leave plenty of space for the game grid.
+
+```{r eval = FALSE}
+#| code-fold: true
+#| code-summary: "UI structure"
+
+library(shiny)
+library(shinyalert)
+
+# Define UI
+ui <- fluidPage(
+  
+    # Application title
+    titlePanel("Hot and cold"),
+    #define sidebar layout
+    sidebarLayout(
+      #all our inputs and play button will go into the sidebarPanel
+      sidebarPanel(),
+      
+      #the game grid and movement buttons will be in the main panel
+      mainPanel()
+    )
+)    
+```
+
+Ok, we have the general layout, lets fill it with some inputs! We need 3 inputs: number of rows, columns and walls plus a button that will initialize the game. `NumericInput()` will definitely do the job and we don't need anything more fancy here. Each numeric input needs an id that will later be referenced in the server side to retrieve its value, a label to display and a set of values: range + a default value to display. I've set the possible range for rows and columns from 2 to 20. More than 20 would probably make the game difficult to play on a computer screen because the cells would be really tiny. The limit for walls is from 1 to 100 (though you can set a different one). Buttons are created with `actionButton()` which also need an id and a label. I added an additional class which will make styling it easier.
+
+```{r eval=FALSE}
+#| code-fold: true
+#| code-summary: "UI with inputs"
+
+library(shiny)
+library(shinyalert)
+
+ui <- fluidPage(
+    # Application title
+    titlePanel("Hot and cold"),
+    sidebarLayout(
+      sidebarPanel(
+        numericInput("nrow", "Number of rows", value = 5, min = 2, max = 20),
+        numericInput("ncol", "Number of columns", value = 5, min = 2, max = 20),
+        numericInput("walls", "Number of walls", value = 1, min = 1, max = 100),
+        actionButton("play", "PLAY!", class = "btn-lg btn-success")
+      ),
+      mainPanel()
+        
+    )    
+)
+```
+
+Now, on to the main panel. We'll need to put the game grid in it. We can render it as a table with `tableOutput()` (don't worry it does not look great for now, we'll make it prettier soon). We'll also need to define buttons for moving in each directions. For each button we can use the same function as for the play button, just with different ids and labels. One additional thing to note is that we are using `fluidRow()` for the buttons. This way the buttons will be displayed below the table.
+
+```{r eval=FALSE}
+#| code-fold: true
+#| code-summary: "UI with inputs and outputs"
+
+library(shiny)
+library(shinyalert)
+
+ui <- fluidPage(
+    # Application title
+    titlePanel("Hot and cold"),
+    sidebarLayout(
+      #trying to wrap in a div to set background color for sideb
+      
+      sidebarPanel(id="sidebar",
+        numericInput("nrow", "Number of rows", value = 5, min = 1, max = 20),
+        numericInput("ncol", "Number of columns", value = 5, min = 1, max = 20),
+        numericInput("walls", "Number of walls", value = 1, min = 1, max = 50),
+        actionButton("play", "PLAY!", class = "btn-lg btn-success")
+      ),
+      mainPanel(
+          tableOutput("matrix"),
+        fluidRow(
+          actionButton("left", "LEFT", class = "btn-lg btn-success"),
+          actionButton("up", "UP", class = "btn-lg btn-success"),
+          actionButton("down", "DOWN", class = "btn-lg btn-success"),
+          actionButton("right", "RIGHT", class = "btn-lg btn-success")
+        )
+      )
+    )    
+)
+```
+
+Now we have the general ui for the game ready. We'll add a few things later to make it look better but for now we can leave it as it is. We can move on to the server side.
+
+## Building the server side
+
+When adjusting the server side of the game we need to make two things. First, we need to define the `server()` function for the app. Second, we need to adjust our functions of the `hot_and_cold()` game. In order to make things cleaner I keep all the game functions in an additional file `app_functions.R` and `source()` them at the top of the app script. It makes the script less cluttered with code and easier to work with because all that is left in the app is the shiny logic. We'll start with defining the `server()` function and then make the adjustment in the game functions. For now, what matters is that we'll have to package the entire state of the game (current coordinates, target coordinates, wall coordinates, number of moves, distance) in a single object (preferably in a list) to return in as a result of the game initiating function.
+
+### The server side
+
+The general structure of the server side is pretty straightforward. We'll start by rendering a welcome message that explains the rules of the game. Next we'll have to create a logic to start the game with proper inputs. Finally we'll define a logic for each movement which will also check if the game was won and display a winning message. Lets start by defining a welcome message:
+
+```{r eval=FALSE}
+#| code-fold: true
+#| code-summary: "server with welcome message"
+
+server <- function(input, output) {
+  #Welcome message and rules
+  shinyalert("Welcome", "This is a hot & cold game\nThe rules are:
+             You have to find the treasure. You can move by pressing up, down, left or right. Human icon shows your current position. You cant walk over walls. After each move the game will tell you if you are getting closer (Hot) or further (cold)", type = "info", className = "welcome", animation=TRUE)
+}
+```
+
+Now we need to define a logic that will start the game with given inputs. Since the game is initiated when the "play" button is pressed we need to use `observeEvent()` which listens to the specified button and executes given code if it is pressed. We'll call our function to initialize the game `get_game_grid()` and it will take 3 arguments from our inputs. It returns a single list `game_state` which contains all information about a current state of the game. Next, we'll render the output matrix (our game grid) with `renderTable()`. We'll add one thing to the output to get rid of column names from the matrix.
+
+```{r eval=FALSE}
+#| code-fold: true
+#| code-summary: "server with start button logic"
+
+
+
+server <- function(input, output) {
+  #Welcome message and rules
+  shinyalert("Welcome", "Hey hi hello! This is a hot & cold game\nThe rules are:
+             You have to find the treasure. You can move by pressing
+             up, down, left or right. X shows your current position
+             You cant walk over walls which are shown with #
+             after each move the game will tell you if you are getting
+             closer (Hot) or further (cold)", type = "info", className = "welcome", animation=TRUE)
+  
+  #initialize game when play pressed
+  observeEvent(input$play, {
+    game_state <<- get_game_grid(input$nrow, input$ncol, input$walls)
+    current_coord <<- game_state$current_coord
+    output$matrix <- renderTable({
+      game_grid <- game_state$game_grid 
+    }, sanitize.text.function = function(x) x)
+  })
+}
+```
+
+We'll use a very similar logic to define behavior of movement buttons. Each `observeEvent()` will listen to one movement button and execute the `make_move()` function with proper arguments when pressed. Next it will render the game grid again, extract the current and target coordinates to check if the game is won and display a winning message if it is.
+
+```{r eval=FALSE}
+#| code-fold: true
+#| code-summary: "server with movement logic"
+
+
+server <- function(input, output) {
+  #Welcome message and rules
+  shinyalert("Welcome", "This is a hot & cold game\nThe rules are:
+             You have to find the treasure. You can move by pressing up, down, left or right. Human icon shows your current position. You cant walk over walls. After each move the game will tell you if you are getting closer (Hot) or further (cold)", type = "info", className = "welcome", animation=TRUE)
+  
+  #initialize game when play pressed
+  observeEvent(input$play, {
+    game_state <<- get_game_grid(input$nrow, input$ncol, input$walls)
+    current_coord <<- game_state$current_coord
+    output$matrix <- renderTable({
+      game_grid <- game_state$game_grid 
+    }, sanitize.text.function = function(x) x)
+  })
+  
+  #Define movements when buttons are pressed
+  observeEvent(input$up, {
+    game_state <<- make_move(1,-1, game_state)
+    current_coord <<-game_state$current_coord
+    target_coord <- game_state$target_coord
+    output$matrix <- renderTable({
+      game_grid <- game_state$game_grid
+    }, sanitize.text.function = function(x) x)
+    if ((target_coord[1] == current_coord[1] & target_coord[2] == current_coord[2])) {
+      shinyalert(paste0("Congratulations!
+                      You found the treasure in", game_state$n_moves, ' moves'),type = "success")
+    }
+    
+  })
+  
+}
+```
+
+Now we just need to create `observeEvent()` for each button with proper arguments in the `make_move()` function. The final version of the server side will look like this:
+
+```{r eval=FALSE}
+#| code-fold: true
+#| code-summary: "full server function"
+
+server <- function(input, output) {
+  
+  #Welcome message and rules
+  shinyalert("Welcome", "This is a hot & cold game\nThe rules are:
+             You have to find the treasure. You can move by pressing up, down, left or right. Human icon shows your current position. You cant walk over walls. After each move the game will tell you if you are getting closer (Hot) or further (cold)", type = "info", className = "welcome", animation=TRUE)
+  
+  #initialize game when play pressed
+  observeEvent(input$play, {
+    game_state <<- get_game_grid(input$nrow, input$ncol, input$walls)
+    current_coord <<- game_state$current_coord
+    output$matrix <- renderTable({
+      game_grid <- game_state$game_grid 
+    }, sanitize.text.function = function(x) x)
+  })
+
+  #Define movements when buttons are pressed
+  observeEvent(input$up, {
+    game_state <<- make_move(1,-1, game_state)
+    current_coord <<-game_state$current_coord
+    target_coord <- game_state$target_coord
+    output$matrix <- renderTable({
+      game_grid <- game_state$game_grid
+    }, sanitize.text.function = function(x) x)
+    if ((target_coord[1] == current_coord[1] & target_coord[2] == current_coord[2])) {
+      shinyalert(paste0("Congratulations!
+                      You found the treasure in", game_state$n_moves, ' moves'),type = "success")
+    }
+    
+  })
+    
+  observeEvent(input$down, {
+    game_state <<- make_move(1,1, game_state)
+    current_coord <<- game_state$current_coord
+    target_coord <- game_state$target_coord
+    output$matrix <- renderTable({
+      game_state$game_grid
+    }, sanitize.text.function = function(x) x)
+    if ((target_coord[1] == current_coord[1] & target_coord[2] == current_coord[2])) {
+      shinyalert(paste0("Congratulations!
+                      You found the treasure in", game_state$n_moves, ' moves'),type = "success")
+    }
+
+  })
+  
+  observeEvent(input$right, {
+    game_state <<- make_move(2,1, game_state)
+    current_coord <<-game_state$current_coord
+    target_coord <- game_state$target_coord
+    output$matrix <- renderTable({
+      game_state$game_grid
+    }, sanitize.text.function = function(x) x)
+    if ((target_coord[1] == current_coord[1] & target_coord[2] == current_coord[2])) {
+      shinyalert(paste0("Congratulations!
+                      You found the treasure in", game_state$n_moves, ' moves'),type = "success")
+    }
+
+  })
+  
+  observeEvent(input$left, {
+    game_state <<- make_move(2,-1, game_state)
+    current_coord <<-game_state$current_coord
+    target_coord <- game_state$target_coord
+    output$matrix <- renderTable({
+      game_state$game_grid
+    }, sanitize.text.function = function(x) x)
+    if ((target_coord[1] == current_coord[1] & target_coord[2] == current_coord[2])) {
+      shinyalert(paste0("Congratulations!
+                      You found the treasure in ", game_state$n_moves, ' moves'), type = "success")
+    }
+
+  })
+  
+}
+```
+
+### Adjusting internal functions
+
+We need to split the game function into 2: one to initialize the game and a second function for making a move. This way one function will be called when the player presses the "play" button and another function will be called when the player makes a move. We'll also need 3 additional files in a www folder to use in the game grid. We'll call the function that initializes the game `get_game_grid()`. It should include all the stuff from our earlier game function until the initial game grid is drawn (so it defines the grid, creates starting, target and wall coordinates, performs necessary checks, calculates distance and initiates move counter). We need to make 2 changes to the function:
+
+-   we want to return a whole list to keep the entire state of the game in one object that can then be passed as a single argument to the movement function. It'll look like this:
+
+    ```{r eval=FALSE}
+    result_list <- list(nrow = nrow, ncol = ncol, game_grid = game_grid, 
+                        start_coord = start_coord, target_coord = target_coord,
+                        current_coord = current_coord, walls_coords= walls_coords,
+                        old_distance = old_distance, new_distance = old_distance, n_moves =n_moves)
+    ```
+
+-   we can already include images instead of our `X`, `-` and `#` to make the grid look a little better. For now I quickly created simple graphics: `player2.png`, `cell.png` and `wall.png` in the www folder which we create in our project directory. I created mine in paint, no need to get fancier here (though you can if you want to!). You can find the exact images I used in the github [repo](https://github.com/Honestiore/shiny_game) of the app. We'll keep all the checks and initial definitions with the original symbols just for the ease of use and rather include the images just before drawing the game grid which will look something like this:
+
+    ```{r eval=FALSE}
+    #| code-fold: true
+    #| code-summary: "images in the game grid"
+      if(debug == FALSE) {
+        game_grid[target_coord[1], target_coord[2]] <- '<img src="cell.png" style="display:flex; max-width:50%; height:auto" />'
+      }
+      
+      # player icon was adapted from https://commons.wikimedia.org/wiki/File:Running_icon_-_Noun_Project_17825.svg
+      # which is listed under Creative Commons 3.0 attribution license.
+      # Attribution goes to Dillon Arloff, from The Noun Project.
+      # The original icon was resized, had colors changed and the three horizontal lines deleted
+      game_grid[start_coord[1], start_coord[2]] <- '<img src="player2.png" style="display:flex; max-width:50%; height:auto" />'
+      
+      
+      for(i in walls_coords) {
+        game_grid[i[1],i[2]] <- '<img src="wall.png" style="height:auto; width:auto; display:flex; max-width:50%; height:auto" />'
+      }
+      
+      game_grid[game_grid=="-"] <- '<img src="cell.png" style="display:flex; max-width:50%; height:auto" />'
+    ```
+
+    I also included some styling already that will help us get the grid to fit into the screen. Without it drawing a larger grid would make it larger than the screen and the game would be difficult to play.
+
+    The movement function will be used to make each move. We need to change a few things in the original movement function. First, we need `make_move()` function to include our earlier arguments that define if we move horizontally and if we add or subtract but now we need to include an additional argument - the game state. The game state is the `result_list` returned by `get_game_grid()` (and will also be returned by `make_move()`). Once we get the game state as argument the first thing we'll do inside the function is unpack it to single elements that will be easier to work with later. At the end we will also pack everything back into a list and return it. Next, we need to change messages when some check is not passed (e.g. the player tries to walk pout of the grid) into notifications and then return the original game state. To create notifications just use `shownotification()`. Finally, just like in the `get_game_grid()` we need to use images instead of symbols in our game grid. The final version of the `app_functions.R` file is:
+
+```{r eval = FALSE}
+#| code-fold: true
+#| code-summary: "full game functions"
+
+
+get_game_grid <- function(nrow, ncol, n_walls, debug = FALSE) {
+  
+  game_grid <- matrix(rep('-', nrow*ncol), nrow = nrow, ncol = ncol)
+  
+  #2 define target coordinates
+  obj_x <- sample(1:nrow, 1)
+  obj_y <- sample(1:ncol, 1)
+  target_coord <- c(obj_x, obj_y)
+  
+  
+  #3define start coordinates
+  get_start_coord <- function() {
+    start_x <- sample(1:nrow, 1)
+    start_y <- sample(1:ncol, 1)
+    start_coord <- c(start_x, start_y)
+    
+    #check if start coordinates are not target coordinates
+    if (target_coord[1] == start_coord[1] & target_coord[2] == start_coord[2]) {
+      get_start_coord()
+    }
+    return(start_coord)
+  }
+  
+  start_coord <- get_start_coord()
+  
+  #Create walls
+  create_walls <- function() {
+    #define walls
+    
+    #create a grid of all coordinates
+    all_coords <- expand.grid(1:nrow, 1:ncol)
+    
+    walls <- do.call(`rbind`, sample(asplit(all_coords, 1), n_walls))
+    
+    walls_coords <- split(walls, seq(nrow(walls)))
+    
+    return(walls_coords)
+  }
+  
+  walls_coords <- create_walls()
+  
+  #Check if start or target coords are not on a wall
+  while((list(target_coord) %in% walls_coords) | (list(start_coord) %in% walls_coords)) {
+    walls_coords <- create_walls()
+  }
+  
+  #BFS ALGORITHM TO CHECK IF GAME IS WINNABLE
+  is_valid_move <- function(row, col, n, p, visited) {
+    # Check if the cell is within the bounds of the matrix
+    if (row < 1 || row > n || col < 1 || col > p) {
+      return(FALSE)
+    }
+    
+    # Check if the cell has already been visited
+    if (visited[row, col]) {
+      return(FALSE)
+    }
+    
+    # Check if the cell is valid (i.e., contains "-", "X", or "T")
+    if (!(game_grid[row, col] %in% c("-", "X", "T"))) {
+      return(FALSE)
+    }
+    
+    # If all conditions are satisfied, the move is valid
+    return(TRUE)
+  }
+  
+  # Define the function to find a path between "X" and "T"
+  find_path <- function(game_grid) {
+    # Define the start and end cells
+    start_row <- which(game_grid == "X", arr.ind = TRUE)[1]
+    start_col <- which(game_grid == "X", arr.ind = TRUE)[2]
+    end_row <- which(game_grid == "T", arr.ind = TRUE)[1]
+    end_col <- which(game_grid == "T", arr.ind = TRUE)[2]
+    
+    # Define the queue and visited matrix
+    queue <- list()
+    visited <- matrix(FALSE, nrow = nrow(game_grid), ncol = ncol(game_grid))
+    
+    # Add the start cell to the queue
+    queue[[1]] <- c(start_row, start_col, 0)
+    
+    # Loop until the queue is empty
+    while (length(queue) > 0) {
+      # Get the first cell in the queue
+      curr_cell <- unlist(queue[[1]])
+      curr_row <- curr_cell[1]
+      curr_col <- curr_cell[2]
+      curr_dist <- curr_cell[3]
+      
+      # Remove the first cell from the queue
+      queue <- queue[-1]
+      
+      # Mark the cell as visited
+      visited[curr_row, curr_col] <- TRUE
+      
+      # Check if the current cell is the end cell
+      if (curr_row == end_row && curr_col == end_col) {
+        # Return the distance from the start cell to the end cell
+        return(curr_dist)
+      }
+      
+      # Check the neighboring cells
+      neighbor_cells <- list(c(curr_row - 1, curr_col), c(curr_row + 1, curr_col), 
+                             c(curr_row, curr_col - 1), c(curr_row, curr_col + 1))
+      for (neighbor_cell in neighbor_cells) {
+        neighbor_row <- neighbor_cell[1]
+        neighbor_col <- neighbor_cell[2]
+        
+        if (is_valid_move(neighbor_row, neighbor_col, nrow(game_grid), ncol(game_grid), visited)) {
+          # Add the neighboring cell to the queue
+          queue[[length(queue) + 1]] <- c(neighbor_row, neighbor_col, curr_dist + 1)
+        }
+      }
+    }
+    
+    # If no path is found, return FALSE
+    return(FALSE)
+  }
+  #add a check that there exists a path! We'll need the BFS for this
+  
+  
+  #display the first grid and instructions
+  #change elements of grid to walls:
+  for(i in walls_coords) {
+    game_grid[i[1],i[2]] <- '#'
+  }
+  
+  game_grid[start_coord[1], start_coord[2]] <- 'X'
+  game_grid[target_coord[1], target_coord[2]] <- 'T'
+  
+  bfs_result <- find_path(game_grid)
+  
+  while(!bfs_result | (list(target_coord) %in% walls_coords) | (list(start_coord) %in% walls_coords)) {
+    #regenerate walls
+    walls_coords <- create_walls()
+    game_grid <- matrix(rep('-', nrow*ncol), nrow = nrow, ncol = ncol)
+    for(i in walls_coords) {
+      game_grid[i[1],i[2]] <- '#'
+    }
+    
+    game_grid[start_coord[1], start_coord[2]] <- 'X'
+    game_grid[target_coord[1], target_coord[2]] <- 'T'
+    bfs_result <- find_path(game_grid)
+    
+  }
+  
+  if(debug == FALSE) {
+    game_grid[target_coord[1], target_coord[2]] <- '<img src="cell.png" style="display:flex; max-width:50%; height:auto" />'
+  }
+  
+   # player icon was adapted from https://commons.wikimedia.org/wiki/File:Running_icon_-_Noun_Project_17825.svg
+  # which is listed under Creative Commons 3.0 attribution license.
+  # Attribution goes to Dillon Arloff, from The Noun Project.
+  # The original icon was resized, had colors changed and the three horizontal lines deleted
+  
+  game_grid[start_coord[1], start_coord[2]] <- '<img src="player2.png" style="display:flex; max-width:50%; height:auto" />'
+  
+  
+  for(i in walls_coords) {
+    game_grid[i[1],i[2]] <- '<img src="wall.png" style="height:auto; width:auto; display:flex; max-width:50%; height:auto" />'
+  }
+  
+  game_grid[game_grid=="-"] <- '<img src="cell.png" style="display:flex; max-width:50%; height:auto" />'
+  
+  #set current coordinates
+  current_coord <- start_coord
+  
+  #calculate distance as Manhattan
+  
+  old_distance <- sum(abs(target_coord[1] - current_coord[1]),abs(target_coord[2] - current_coord[2]))
+  
+  #initiate move counter
+  
+  n_moves <- 1
+  
+  
+  result_list <- list(nrow = nrow, ncol = ncol, game_grid = game_grid, start_coord = start_coord, target_coord = target_coord,
+                      current_coord = current_coord, walls_coords= walls_coords, old_distance = old_distance, new_distance = old_distance,
+                      n_moves =n_moves)
+  
+  return(result_list)
+}
+
+
+make_move <- function(h, add, game_state) {
+  
+  
+  #unpack game state
+  nrow <- game_state$nrow
+  ncol <- game_state$ncol
+  start_coord <- game_state$start_coord
+  target_coord <- game_state$target_coord
+  current_coord <- game_state$current_coord
+  old_distance <- game_state$old_distance
+  new_distance <- game_state$new_distance
+  walls_coords <- game_state$walls_coords
+  n_moves <- game_state$n_moves
+  game_grid <- game_state$game_grid
+  
+  
+  if (h == 1 & add == 1) {
+    if (current_coord[h] + add > nrow) {
+      showNotification('You cant move there!')
+      return(game_state) # this will force R to move to the next iteration of the loop
+    } 
+    if (list(as.integer(c(current_coord[1]+ add,current_coord[2] ))) %in% walls_coords) {
+      #check if you walk on a wall
+      showNotification('You cant move there!')
+      return(game_state)
+    }
+  } else if (h == 1 & add==-1) {
+    if (current_coord[h] + add < 1) {
+      showNotification('You cant move there!')
+      return(game_state) # this will force R to move to the next iteration of the loop
+    } 
+    if (list(as.integer(c(current_coord[1] + add,current_coord[2]))) %in% walls_coords) {
+      #check if you walk on a wall
+      showNotification('You cant move there!')
+      return(game_state)
+    }
+    
+  } else if (h == 2 & add==1) {
+    if (current_coord[h] + add > ncol) {
+      showNotification('You cant move there!')
+      return(game_state) # this will force R to move to the next iteration of the loop
+    } 
+    if (list(as.integer(c(current_coord[1],current_coord[2]+ add))) %in% walls_coords) {
+      #check if you walk on a wall
+      showNotification('You cant move there!')
+      return(game_state)
+    }
+    
+  } else if (h == 2 & add==-1) {
+    if (current_coord[h] + add < 1) {
+      showNotification('You cant move there!')
+      return(game_state) # this will force R to move to the next iteration of the loop
+    } 
+    if (list(as.integer(c(current_coord[1] ,current_coord[2]+ add))) %in% walls_coords) {
+      #check if you walk on a wall
+      showNotification('You cant move there!')
+      return(game_state)
+    }
+  }
+  
+  
+  #update grid and coords
+  game_grid[current_coord[1], current_coord[2]] <- '<img src="cell.png" style="display:flex; max-width:30%; height:auto" />'
+  current_coord[h] <- current_coord[h] + add
+  game_grid[current_coord[1], current_coord[2]] <- '<img src="player2.png" style="display:flex; max-width:30%; height:auto" />'
+  
+  #update distance and number of moves
+  new_distance <- sum(abs(target_coord[1] - current_coord[1]),abs(target_coord[2] - current_coord[2]))
+  n_moves <- n_moves + 1
+  
+  #display message
+  if(new_distance < old_distance) {
+    showNotification('Hotter!', type = 'warning')
+  } else if (new_distance > old_distance) {
+    showNotification('Colder!', type = 'error')
+  }
+  #update distance
+  old_distance <- new_distance
+  #print grid and make next move
+  
+  result_list <- list(nrow = nrow, ncol = ncol, game_grid = game_grid, start_coord = start_coord, target_coord = target_coord,
+                                    current_coord = current_coord, old_distance = old_distance, new_distance = old_distance,
+                                    n_moves =n_moves, walls_coords = walls_coords)
+  
+  return(result_list)
+  
+}
+```
+
+Just add `source(app_functions.R)` at the top of the app script to load the game functions.
+
+## Styling the app
+
+Ok, we have a working version of the game! However, it still does not look great. The last thing we need to do before launching it is to make it look better. We'll just add a css file that will define some fonts, colors etc. Lets call the file `style.css` and put it in the project directory but if you want to go really fancy with it you can look for more information [here](https://unleash-shiny.rinterface.com/index.html). To load the style add `includeCSS("style.css")` inside the `fluidPage()` in the ui. We'll start by defining the fonts and general colors. The import statement loads a proper google font. and the `*` statement defines general colors and font.
+
+Generally we change the look of 2 other things: all the buttons, notifications and inputs are styled to have the same dark background and the same font. We also defined different color for hovering over the buttons. The notifications were a bit tricky because it was hard to find their css classes (they are defined from `.welcome` to `.shiny-notification` in the code below). The other thing we need to change is how the game grid looks like. Recall that it is rendered as a table with images in each cell. The tricky thing is that the table has varying number of rows and columns and we want it to fit the screen and resize all the images to fit the table. We also want to get rid of all the spacing and borders between the cells (we only keep borders around the entire table). The table is defined from `table` to the end of the code chunk below. Honestly I have very little experience with css and some of the code below may be redundant but it works and it took me so long to get it ok that for now I'm willing to leave it as is.
+
+```{r, eval=FALSE}
+#| code-fold: true
+#| code-summary: "css code"
+
+@import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono&display=swap');
+
+*{
+  font-family: "Share Tech Mono";
+  color: #66FF00;
+  background-color: #001219;
+}
+
+h2{
+  font-size: 5em;
+}
+
+body{
+  color: #66FF00;
+  background-color: #001219;
+}
+
+#sidebar{ 
+  color: #66FF00;
+  background-color: #001219;
+  border-color: #66FF00;
+  font-size: 2.5em;
+}
+
+.form-control{
+  color: #66FF00;
+  background-color: #001219;
+  border-color: #66FF00;
+    font-size: 1em;
+}
+
+.btn{
+  color: #66FF00;
+  background-color: #001219;
+}
+
+.btn:hover{
+  color: #66FF00;
+  background-color: #264653;
+}
+
+.welcome{
+  color: #66FF00;
+  background-color: #001219;
+  font-size: 1.5em;
+}
+
+.win{
+  font-family: "Share Tech Mono";
+  color: #66FF00;
+  background-color: #001219;
+  font-size: 1.5em;
+}
+
+.alert{
+  color: #66FF00;
+  background-color: #001219;
+  !important;
+}
+
+.confirm{
+  color: #66FF00;
+  background-color: #001219;
+  !important;
+}
+
+.shiny-notification{
+  font-family: "Share Tech Mono";
+  color: #66FF00;
+  background-color: #001219;
+}
+
+table{
+  table-layout:fixed;
+  height: 70%;
+  width: 90%;
+  border-style: solid;
+  border-color: #66FF00;
+  
+}
+
+#matrix td {
+  border-color: #66FF00;
+  aspect-ratio: 1 / 1;
+  max-height: 100%;
+  max-width: 100%;
+  padding: 0px; 
+  margin: 0px; 
+  border: 0px;
+  align-content: center;
+}
+
+#matrix th {
+  display: none;
+}
+
+img {
+   max-width:100%;
+   vertical-align: bottom;
+   height:auto;
+   display:block;
+}
+```
+
+## Final tweaks
+
+There are some tweaks you can make to the game if you want at this point. e.g. in the final version I changed Manhattan distance to Euclidean which I think makes the game a bit more difficult. You just need to change how `current_distance` is calculated.
+
+## Launching the app
+
+Ok, now we're ready to go! You can run the `shinyapp(ui,server)` function to see your working game!.
+
+A working version of the game can also be accessed [here](https://honestiore.shinyapps.io/shiny_game/). The code is stored in my github repository [here](https://github.com/mic-wypych/shiny_game).
+
+The image used in the post thumbnail is taken from <https://unsplash.com/photos/A_Z–0ey4HQ>.

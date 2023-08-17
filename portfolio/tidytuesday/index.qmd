@@ -1,0 +1,15 @@
+---
+title: "#Tidytuesday"
+author: "Michał Wypych"
+date: "2023-02-18"
+---
+
+Some of my tidytuesday contributions:
+
+[![](images/Marathons.png){fig-alt="Tidytuesday 2023 Week 17 | Marathons" fig-align="center"}](https://github.com/mic-wypych/tidytuesday/tree/main/2023/week17)
+
+[![](images/bob_ross.png){fig-alt="Tidytuesday 2023 week 8" fig-align="center"}](https://github.com/mic-wypych/tidytuesday/tree/main/2023/week4)
+
+![](images/week4.png){fig-alt="Tidytuesday 2023 week 4" fig-align="center"}
+
+[![](images/museums.png){fig-alt="Tidytuesday 2022 week 47"}](https://github.com/mic-wypych/tidytuesday/tree/main/2022/week47)

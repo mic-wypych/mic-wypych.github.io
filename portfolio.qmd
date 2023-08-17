@@ -1,0 +1,13 @@
+---
+title: "Portfolio"
+listing:
+  contents: portfolio
+  sort: "date desc"
+  type: grid
+  image-height: 400px
+  categories: false
+  sort-ui: false
+  filter-ui: false
+page-layout: full
+title-block-banner: true
+---

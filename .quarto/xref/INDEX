@@ -1,0 +1,38 @@
+{
+  "posts/first-game/index.qmd": {
+    "index.html": "d2cbc38e"
+  },
+  "about.qmd": {
+    "about.html": "f05b05a1"
+  },
+  "posts/post-with-code/index.qmd": {
+    "index.html": "9d1ac29a"
+  },
+  "posts/welcome/index.qmd": {
+    "index.html": "647e5a4e"
+  },
+  "index.qmd": {
+    "index.html": "9210f9d6"
+  },
+  "portfolio.qmd": {
+    "portfolio.html": "0a6c4b34"
+  },
+  "posts/first-game-2/index.qmd": {
+    "index.html": "049ab60e"
+  },
+  "research.qmd": {
+    "research.html": "7351b8a7"
+  },
+  "teaching.qmd": {
+    "teaching.html": "ebfdae94"
+  },
+  "portfolio/project_1/index.qmd": {
+    "index.html": "7e1eb62e"
+  },
+  "blog.qmd": {
+    "blog.html": "d69d5d71"
+  },
+  "portfolio/tidytuesday/index.qmd": {
+    "index.html": "be211a6f"
+  }
+}
