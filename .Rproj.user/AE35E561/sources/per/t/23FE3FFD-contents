@@ -1,0 +1,17 @@
+---
+title: ""
+listing:
+  contents: posts
+  sort: "date desc"
+  type: default
+  categories: true
+  sort-ui: false
+  filter-ui: false
+page-layout: full
+title-block-banner: true
+---
+
+Hello!
+
+I'm Michał. I'm a social psychologist currently pursuing a PhD at University of Warsaw where I'm studying mechanisms behind spread of hate speech.\
+I'm also passionate about R.
