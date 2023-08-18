@@ -1,7 +1,7 @@
 ---
 title: "Make a game in R - shiny [part 2]"
 author: "Michał Wypych"
-date: "2023-05-23"
+date: "2023-08-18"
 categories: [apps, games]
 image: "image.jpg"
 toc: true
