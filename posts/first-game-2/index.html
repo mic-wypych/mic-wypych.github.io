@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Michał Wypych">
-<meta name="dcterms.date" content="2023-05-23">
+<meta name="dcterms.date" content="2023-08-18">
 
 <title>Michał Wypych - Make a game in R - shiny [part 2]</title>
 <style>
@@ -99,7 +99,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-fixed">
+<body class="floating nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -155,9 +155,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
+    <div class="quarto-title column-page-right">
       <h1 class="title">Make a game in R - shiny [part 2]</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">apps</div>
@@ -179,7 +179,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 23, 2023</p>
+        <p class="date">August 18, 2023</p>
       </div>
     </div>
     
@@ -187,11 +187,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
@@ -208,9 +207,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#launching-the-app" id="toc-launching-the-app" class="nav-link" data-scroll-target="#launching-the-app">Launching the app</a></li>
   </ul>
 </nav>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content quarto-banner-title-block column-page-right" id="quarto-document-content">
 
 
 
@@ -218,7 +221,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>As you may recall in the previous <a href="../first-game/index.html">post</a> we’ve built a simple game in R that is about finding a treasure by following some clues. The game works fine in the R console but it does not look good. In this post I want to focus on messing with the ui - lets put the game into a shiny app!</p>
 <section id="brief-overview-of-shiny" class="level2">
 <h2 class="anchored" data-anchor-id="brief-overview-of-shiny">Brief overview of shiny</h2>
-<p>I won’t go into details about <code>shiny</code> in this post because it would take way too long (if you want to you can go <a href="https://mastering-shiny.org/">here</a>). The general idea behind making interactive web apps with shiny is to split them into 2 components: user interface (UI) and the server. UI is the part that controls how things are displayed. The server side is where all calculations happen. We will generally follow this logic with one exception: we’ll keep all the big and important functions for the game in a separate file so that the app file contains only the shiny stuff. we’ll also be using the <code>shinyalert</code> package for rendering messages.</p>
+<p>I won’t go into details about <code>shiny</code> in this post because it would take way too long (if you want to you can go <a href="https://mastering-shiny.org/">here</a>). The general idea behind making interactive web apps with shiny is to split them into 2 components: user interface (UI) and the server. UI is the part that controls how things are displayed. The server side is where all calculations happen. We will generally follow this logic with one exception: we’ll keep all the big and important functions for the game in a separate file so that the app file contains only the shiny stuff. we’ll also be using the <code>shinyalert</code> package for rendering messages. If you’re interested in making games in shiny there are some great materials by Jesse Mostipak and Barret Schloerke e.g.&nbsp;<a href="https://www.youtube.com/watch?v=sD39WAZo99A">here</a>.</p>
 </section>
 <section id="roadmap" class="level2">
 <h2 class="anchored" data-anchor-id="roadmap">Roadmap</h2>
@@ -906,6 +909,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="launching-the-app">Launching the app</h2>
 <p>Ok, now we’re ready to go! You can run the <code>shinyapp(ui,server)</code> function to see your working game!.</p>
 <p>A working version of the game can also be accessed <a href="https://honestiore.shinyapps.io/shiny_game/">here</a>. The code is stored in my github repository <a href="https://github.com/mic-wypych/shiny_game">here</a>.</p>
+<p>The image used in the post thumbnail is taken from <a href="https://unsplash.com/photos/A_Z–0ey4HQ" class="uri">https://unsplash.com/photos/A_Z–0ey4HQ</a>.</p>
 
 
 </section>
