@@ -67,7 +67,7 @@
     "href": "posts/first-game-2/index.html#brief-overview-of-shiny",
     "title": "Make a game in R - shiny [part 2]",
     "section": "Brief overview of shiny",
-    "text": "Brief overview of shiny\nI won’t go into details about shiny in this post because it would take way too long (if you want to you can go here). The general idea behind making interactive web apps with shiny is to split them into 2 components: user interface (UI) and the server. UI is the part that controls how things are displayed. The server side is where all calculations happen. We will generally follow this logic with one exception: we’ll keep all the big and important functions for the game in a separate file so that the app file contains only the shiny stuff. we’ll also be using the shinyalert package for rendering messages."
+    "text": "Brief overview of shiny\nI won’t go into details about shiny in this post because it would take way too long (if you want to you can go here). The general idea behind making interactive web apps with shiny is to split them into 2 components: user interface (UI) and the server. UI is the part that controls how things are displayed. The server side is where all calculations happen. We will generally follow this logic with one exception: we’ll keep all the big and important functions for the game in a separate file so that the app file contains only the shiny stuff. we’ll also be using the shinyalert package for rendering messages. If you’re interested in making games in shiny there are some great materials by Jesse Mostipak and Barret Schloerke e.g. here."
   },
   {
     "objectID": "posts/first-game-2/index.html#roadmap",
@@ -109,7 +109,7 @@
     "href": "posts/first-game-2/index.html#launching-the-app",
     "title": "Make a game in R - shiny [part 2]",
     "section": "Launching the app",
-    "text": "Launching the app\nOk, now we’re ready to go! You can run the shinyapp(ui,server) function to see your working game!.\nA working version of the game can also be accessed here. The code is stored in my github repository here."
+    "text": "Launching the app\nOk, now we’re ready to go! You can run the shinyapp(ui,server) function to see your working game!.\nA working version of the game can also be accessed here. The code is stored in my github repository here.\nThe image used in the post thumbnail is taken from https://unsplash.com/photos/A_Z–0ey4HQ."
   },
   {
     "objectID": "research.html",

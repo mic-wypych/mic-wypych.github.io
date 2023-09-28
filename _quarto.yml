@@ -18,6 +18,10 @@ website:
 format:
   html:
     theme: theme.scss
+    toc: true
+    toc-location: left
+    page-layout: full
+    highlight-style: nord
 
 editor: visual
 
