@@ -17,4 +17,4 @@ about:
 
 I'm Michał. I'm a social psychologist especially interested in emotions and language.
 
-I'm also passionate about R, I teach an introduction to R course at Faculty of Psychology at University of Warsaw.
+I'm also passionate about R, data vizualisation and analysis. I teach an introduction to R course at Faculty of Psychology at University of Warsaw.

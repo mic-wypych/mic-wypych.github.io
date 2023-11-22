@@ -11,7 +11,7 @@
     "href": "index.html",
     "title": "Michał Wypych",
     "section": "",
-    "text": "I’m Michał. I’m a social psychologist especially interested in emotions and language.\nI’m also passionate about R, I teach an introduction to R course at Faculty of Psychology at University of Warsaw."
+    "text": "I’m Michał. I’m a social psychologist especially interested in emotions and language.\nI’m also passionate about R, data vizualisation and analysis. I teach an introduction to R course at Faculty of Psychology at University of Warsaw."
   },
   {
     "objectID": "portfolio/tidytuesday/index.html",
@@ -131,5 +131,12 @@
     "title": "Teaching",
     "section": "",
     "text": "I teach 2 courses:\n\nSocial Psychology seminar\nIntroduction to R. I’m in the process of developing a website for the course which will be linked shortly"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Michał Wypych",
+    "section": "",
+    "text": "I’m Michał. I’m a social psychologist especially interested in emotions and language. I’m also passionate about R, data vizualisation and analysis. I teach an introduction to R course at Faculty of Psychology at University of Warsaw."
   }
 ]
