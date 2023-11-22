@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://github.com/mic-wypych/mic-wypych.github.io/posts/first-game/index.html</loc>
-    <lastmod>2023-09-28T14:14:29.456Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/mic-wypych/mic-wypych.github.io/teaching.html</loc>
-    <lastmod>2023-09-28T14:14:26.992Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/mic-wypych/mic-wypych.github.io/portfolio.html</loc>
-    <lastmod>2023-09-28T14:14:26.400Z</lastmod>
-  </url>
-  <url>
     <loc>https://github.com/mic-wypych/mic-wypych.github.io/research.html</loc>
-    <lastmod>2023-09-28T14:14:25.696Z</lastmod>
+    <lastmod>2023-11-22T11:22:34.295Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/mic-wypych/mic-wypych.github.io/posts/first-game/index.html</loc>
+    <lastmod>2023-11-22T11:22:33.811Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/mic-wypych/mic-wypych.github.io/blog.html</loc>
-    <lastmod>2023-09-28T14:14:25.016Z</lastmod>
+    <lastmod>2023-11-22T11:22:32.019Z</lastmod>
   </url>
   <url>
-    <loc>https://github.com/mic-wypych/mic-wypych.github.io/portfolio/tidytuesday/index.html</loc>
-    <lastmod>2023-09-28T14:14:26.032Z</lastmod>
+    <loc>https://github.com/mic-wypych/mic-wypych.github.io/teaching.html</loc>
+    <lastmod>2023-11-22T11:22:31.371Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/mic-wypych/mic-wypych.github.io/portfolio.html</loc>
+    <lastmod>2023-11-22T11:22:30.847Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/mic-wypych/mic-wypych.github.io/index.html</loc>
-    <lastmod>2023-09-28T14:14:26.704Z</lastmod>
+    <lastmod>2023-11-22T11:22:31.627Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/mic-wypych/mic-wypych.github.io/posts/first-game-2/index.html</loc>
-    <lastmod>2023-09-28T14:14:28.176Z</lastmod>
+    <lastmod>2023-11-22T11:22:32.895Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/mic-wypych/mic-wypych.github.io/portfolio/tidytuesday/index.html</loc>
+    <lastmod>2023-11-22T11:22:34.055Z</lastmod>
   </url>
 </urlset>
