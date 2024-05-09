@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.554">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -24,7 +24,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -81,7 +81,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -90,6 +96,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -102,10 +109,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Michał Wypych</span>
     </a>
@@ -117,40 +124,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../blog.html" rel="" target="">
- <span class="menu-text">Blog</span></a>
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../portfolio.html" rel="" target="">
- <span class="menu-text">Portfolio</span></a>
+    <a class="nav-link" href="../../portfolio.html"> 
+<span class="menu-text">Portfolio</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../research.html" rel="" target="">
- <span class="menu-text">Research</span></a>
+    <a class="nav-link" href="../../research.html"> 
+<span class="menu-text">Research</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../teaching.html" rel="" target="">
- <span class="menu-text">Teaching</span></a>
+    <a class="nav-link" href="../../teaching.html"> 
+<span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/mic-wypych" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/mic-wypych"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/michal_wypych" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/michal_wypych"> <i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://fosstodon.org/@michal_wypych" rel="" target=""><i class="bi bi-mastodon" role="img">
+    <a class="nav-link" href="https://fosstodon.org/@michal_wypych"> <i class="bi bi-mastodon" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -210,6 +217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
+
 <p>The first idea for making this game came to me when I was thinking of exercises for students to practice loops. I feel that building simple games makes it easier for them to grasp the idea behind iteration and while loops than abstract operations on numbers and vectors.</p>
 <p>Anyway, I made a simple hot-and-cold game. If you haven’t heard about it (idk, maybe it’s just a polish/Easter European thing?) there rules are simple: you have to find a treasure that is hidden somewhere and others keep telling you if you are getting closer (‘hot’!) or further away (‘cold’!) from the object. That’s it, there’s nothing more to it.</p>
 <p>The idea is to play on a rectangular grid, you can move up, down, left or right. After each move the game tells you if you are getting closer or further away from the treasure. You win when you reach the hidden treasure. Also, the fewer moves you need to get there, the better. Sounds simple enough, right? Once we have that we can move on to adding more complex things like obstacles on the grid or messing with the ui.</p>
@@ -235,7 +243,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>We’ll make a <code>debug</code> argument for now to make it easier to see what is exactly going on in the game (we’ll use it to toggle displaying the treasure). It’s something we’ll probably delete from the final game but it might be useful for debugging. The two other arguments: <code>nrow</code> and <code>ncol</code> will control the size of the grid we want to play on. Now lets fill the function with initial conditions for the game. We start with 2 checks - nrow and ncol need to be numbers. Next we create the game grid as a <code>nrow</code> by <code>ncol</code> matrix of <code>-</code> and define random target coordinates. Then we get starting coordinates. To do it we define a function that automatically checks if starting and target coordinates are the same. If they are the same the function starts from the beginning. If they are not it returns starting coordinates. The rest is pretty straightforward. If we are in debug mode we mark the target coordinates on the grid, we define current coordinates for future use in movements, calculate initial distance, start movement counter and display welcome message and the game grid.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Initial conditions</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>hot_and_cold <span class="ot">&lt;-</span> <span class="cf">function</span>(nrow, ncol, <span class="at">debug =</span> <span class="cn">FALSE</span>) {</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#checks: both arguments need to be numbers</span></span>
@@ -327,7 +335,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="movements-and-updating">Movements and updating</h2>
 <p>Ok, we have the grid set up! Now, on to movements. There are 4 ways to move on the grid: up, down, left or right. What we’ll need is to make the function listen to the user and depending on which movement they specify make the necessary checks (we don’t want to fall off the grid!) and change the current position and distance. All of this will have to keep going for as long as current coordinates and target coordinates don’t overlap - a while loop will be perfect for this. As long as current coordinates and target coordinates don’t overlap we listen to user movement (<code>readline</code> function) and if the move is “up” we first check if this move will take us out of the grid (if it does we display a message and skip to the next iteration of the loop). If the move is valid we update current coordinates, recalculate distance and display appropriate message. We will need something like this:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>first move</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span>(<span class="sc">!</span><span class="fu">setequal</span>(current_coord, target_coord)) {</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  movement <span class="ot">&lt;-</span> <span class="fu">readline</span>(<span class="st">'Where do you move: '</span>)</span>
@@ -362,7 +370,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Now, we’ll need four of these: one for each type of movement. This might be tedious to do by hand and might be error-prone. so it should be easier to manage if we put this in a function! The function should take 2 arguments: are we moving on horizontal or vertical axis and whether we should add or subtract.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>movememnt function</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>make_move <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">h =</span> <span class="dv">1</span>, <span class="at">add =</span> <span class="dv">1</span>) {</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    </span>
@@ -417,7 +425,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Now we can put the function into the game:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>game with moves</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>hot_and_cold <span class="ot">&lt;-</span> <span class="cf">function</span>(nrow, ncol, <span class="at">debug =</span> <span class="cn">FALSE</span>) {</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#checks: both arguments need to be numbers</span></span>
@@ -599,7 +607,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The weird thing is that I needed to add <code>as.integer()</code>. This cost me quite a bit of time actually. Without it the game would not let you walk on some walls but would be totally fine with walking over some other walls. The reason for this is that <code>%in%</code> uses <code>match()</code> which converts to character. And adjacent values (like <code>c(1,2)</code>) become <code>1:2</code> which is not the same as <code>c(1,2)</code> when converted to text ( I didn’t come up with this, I asked a question and got an answer <a href="https://stackoverflow.com/questions/75486678/comparing-vectors-of-numeric-and-integers-sometimes-gives-true-and-sometimes-fal/75486889#75486889">here</a>). Anyway, we just need to put that code into our <code>make_move()</code> function and adjust accordingly to the type of move we make. Our updated function will look like this</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>movement function with walls</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>make_move <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">h =</span> <span class="dv">1</span>, <span class="at">add =</span> <span class="dv">1</span>) {</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    </span>
@@ -683,7 +691,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Basically what the algorithm does is it starts from a certain node in a graph (our starting position) and visits all neighbour nodes connected to the initial node, then it moves to all neighbours of the neighbours and so on until all possible routes from the initial node have been explored. In our game only the cells that are adjacent and are not walls are connected. If the position of the treasure shows up in the BFS then the game is winnable! There’s plenty of resources on this algorithm online if you want to learn more about it (just some example <a href="https://www.youtube.com/watch?v=xlVX7dXLS64">here</a>).</p>
 <p>The implementation of BFS in R is not straightforward. First of all we are not working with a nice graph structure (I wanted to keep this game without using any additional packages like <code>igraph</code>) but with a matrix. This means we don’t have anything like adjacency matrix to work with (that’s a matrix that would give us information about which cells are connected to each other). The solution below is probably not the nicest one but it works so it’ll have to suffice. You can see the entire function (actually 2) here:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Breadth first search</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#First we need to define valid moves in the grid for the algorithm</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>is_valid_move <span class="ot">&lt;-</span> <span class="cf">function</span>(row, col, n, p, visited) {</span>
@@ -767,7 +775,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Thanks to this we can make sure that the game can be won (and regenerate walls if it is not). The last thing we need to do is put the BFS to good use inside our <code>hot_and_cold()</code> function. We just need to modify the code that sets the initial conditions before the game begins:</p></li>
 </ol>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Putting BFS to use</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a> <span class="cf">for</span>(i <span class="cf">in</span> walls_coords) {</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    game_grid[i[<span class="dv">1</span>],i[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">'#'</span></span>
@@ -800,7 +808,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The entire game now looks like this (that’s quite a few lines of code):</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>The full game</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>hot_and_cold <span class="ot">&lt;-</span> <span class="cf">function</span>(nrow, ncol, n_walls, <span class="at">debug =</span> <span class="cn">FALSE</span>) {</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#checks: both arguments need to be numbers</span></span>
@@ -1167,10 +1175,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/mic-wypych\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1180,8 +1205,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1193,7 +1227,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1237,6 +1394,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1262,6 +1420,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1322,6 +1506,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+
 
 
 
