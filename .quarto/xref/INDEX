@@ -34,5 +34,8 @@
   },
   "portfolio/tidytuesday/index.qmd": {
     "index.html": "be211a6f"
+  },
+  "drafts/percentile_scales.qmd": {
+    "percentile_scales.html": "3d32ec9f"
   }
 }
