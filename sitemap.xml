@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://mic-wypych.github.io/index.html</loc>
-    <lastmod>2024-05-09T07:04:13.801Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mic-wypych.github.io/blog.html</loc>
-    <lastmod>2024-05-09T07:04:13.801Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mic-wypych.github.io/portfolio/tidytuesday/index.html</loc>
-    <lastmod>2024-05-09T07:04:13.817Z</lastmod>
+    <loc>https://mic-wypych.github.io/portfolio.html</loc>
+    <lastmod>2024-10-08T11:49:49.593Z</lastmod>
   </url>
   <url>
     <loc>https://mic-wypych.github.io/posts/first-game/index.html</loc>
-    <lastmod>2024-05-09T07:04:13.841Z</lastmod>
+    <lastmod>2024-10-08T11:49:49.631Z</lastmod>
   </url>
   <url>
-    <loc>https://mic-wypych.github.io/teaching.html</loc>
-    <lastmod>2024-05-09T07:04:13.841Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mic-wypych.github.io/posts/first-game-2/index.html</loc>
-    <lastmod>2024-05-09T07:04:13.829Z</lastmod>
+    <loc>https://mic-wypych.github.io/blog.html</loc>
+    <lastmod>2024-10-08T11:49:49.593Z</lastmod>
   </url>
   <url>
     <loc>https://mic-wypych.github.io/research.html</loc>
-    <lastmod>2024-05-09T07:04:13.841Z</lastmod>
+    <lastmod>2024-10-08T11:49:49.632Z</lastmod>
   </url>
   <url>
-    <loc>https://mic-wypych.github.io/portfolio.html</loc>
-    <lastmod>2024-05-09T07:04:13.801Z</lastmod>
+    <loc>https://mic-wypych.github.io/index.html</loc>
+    <lastmod>2024-10-08T11:49:49.593Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mic-wypych.github.io/portfolio/tidytuesday/index.html</loc>
+    <lastmod>2024-10-08T11:49:49.607Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mic-wypych.github.io/posts/first-game-2/index.html</loc>
+    <lastmod>2024-10-08T11:49:49.619Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mic-wypych.github.io/teaching.html</loc>
+    <lastmod>2024-10-08T11:49:49.632Z</lastmod>
   </url>
 </urlset>

@@ -1,15 +1,15 @@
 [
   {
+    "listing": "/portfolio.html",
+    "items": [
+      "/portfolio/tidytuesday/index.html"
+    ]
+  },
+  {
     "listing": "/blog.html",
     "items": [
       "/posts/first-game-2/index.html",
       "/posts/first-game/index.html"
-    ]
-  },
-  {
-    "listing": "/portfolio.html",
-    "items": [
-      "/portfolio/tidytuesday/index.html"
     ]
   }
 ]
