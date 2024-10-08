@@ -9,6 +9,7 @@
   {
     "listing": "/portfolio.html",
     "items": [
+      "/portfolio/parks/index.html",
       "/portfolio/tidytuesday/index.html"
     ]
   }
