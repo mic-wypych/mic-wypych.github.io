@@ -1,0 +1,2100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Michał Wypych">
+
+<title>A few remarks on percentile scales – Michał Wypych</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Michał Wypych</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../portfolio.html"> 
+<span class="menu-text">Portfolio</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../research.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/mic-wypych"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/michal_wypych"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://fosstodon.org/@michal_wypych"> <i class="bi bi-mastodon" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">A few remarks on percentile scales</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Michał Wypych </p>
+            </div>
+    </div>
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#looking-at-marginal-distributions" id="toc-looking-at-marginal-distributions" class="nav-link active" data-scroll-target="#looking-at-marginal-distributions">looking at marginal distributions</a></li>
+  <li><a href="#spacing-between-percentiles" id="toc-spacing-between-percentiles" class="nav-link" data-scroll-target="#spacing-between-percentiles">Spacing between percentiles</a>
+  <ul class="collapse">
+  <li><a href="#variability-in-percentiles" id="toc-variability-in-percentiles" class="nav-link" data-scroll-target="#variability-in-percentiles">variability in percentiles</a></li>
+  <li><a href="#simulating-from-real-data" id="toc-simulating-from-real-data" class="nav-link" data-scroll-target="#simulating-from-real-data">Simulating from real data</a></li>
+  <li><a href="#some-caveats-and-what-is-the-point" id="toc-some-caveats-and-what-is-the-point" class="nav-link" data-scroll-target="#some-caveats-and-what-is-the-point">some caveats and what is the point</a></li>
+  </ul></li>
+  <li><a href="#correlations-with-percentiles" id="toc-correlations-with-percentiles" class="nav-link" data-scroll-target="#correlations-with-percentiles">Correlations with percentiles</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>So this post was born out of annoyance with dealing with percentile grids for baby weights and how easily they are misunderstood. What I want to show are some more or less unintuitive features of percentiles scales especially having to do with how the distribution for percentiles looks like and how spacing between percentiles affects potential variability (e.g.&nbsp;in change) depending on where we are on the percentile scale.</p>
+<p>Below is the setup chunk with some functions for plots and loaded packages</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(showtext)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">font_add_google</span>(<span class="st">"Lato"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">font_add_google</span>(<span class="st">"Ubuntu"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">showtext_auto</span>()</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>col_main <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"darkred"</span>, <span class="st">"firebrick3"</span>, <span class="st">"coral1"</span>, <span class="st">"salmon"</span>,<span class="st">"rosybrown3"</span>,<span class="st">"palevioletred1"</span>, <span class="st">"plum4"</span>,<span class="st">"slateblue4"</span>, <span class="st">"purple2"</span>,<span class="st">"springgreen2"</span>, <span class="st">"seagreen"</span>,<span class="st">"skyblue"</span>, <span class="st">"turquoise4"</span>, <span class="st">"steelblue4"</span>, <span class="st">"royalblue3"</span>, <span class="st">"navyblue"</span> )</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>my_theme <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="co">#requires Lato and Ubuntu fonts</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_family =</span> <span class="st">"Lato"</span>, <span class="at">base_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>          <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>          <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">30</span>, <span class="at">family =</span> <span class="st">"Ubuntu"</span>),</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>          <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>),</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"grey80"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>          <span class="at">plot.title.position =</span> <span class="st">"plot"</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>First lets generate some data from a normal distribution and set the random seed.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' lets start with some simulation</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">44</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fl">1e4</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>x_perc <span class="ot">&lt;-</span> <span class="fu">ntile</span>(x, <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="looking-at-marginal-distributions" class="level2">
+<h2 class="anchored" data-anchor-id="looking-at-marginal-distributions">looking at marginal distributions</h2>
+<p>Lets start by looking at simple distributions. This one should be fairly obvious but I feel like it still gets forgotten way to often. How does a distribution of percentiles look like? Lets start with raw x and how it looks like:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(x), <span class="fu">aes</span>(<span class="at">x =</span>x )) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">fill =</span> col_main[<span class="dv">13</span>]) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"distribution of raw values"</span>) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Nice and friendly normal distribution. So how does a percentile distribution look like?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(x_perc), <span class="fu">aes</span>(<span class="at">x =</span>x_perc )) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">100</span>, <span class="at">fill =</span> col_main[<span class="dv">13</span>]) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"distribution of percentiles"</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>It’s perfectly flat! Percentiles will always look like this because, well… by definition they are percentages so the same number of observations into each percentile. We can change the original distribution but it won’t affect the percentile much. We can see it e.g.&nbsp;with exponential distribution:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x_exp <span class="ot">&lt;-</span> <span class="fu">rexp</span>(N, <span class="dv">3</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>x_exp_perc <span class="ot">&lt;-</span> <span class="fu">ntile</span>(x_exp, <span class="dv">100</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>exp_raw <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(x_exp), <span class="fu">aes</span>(<span class="at">x =</span>x_exp)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">fill =</span> col_main[<span class="dv">13</span>]) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"distribution of raw values"</span>) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>exp_perc <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(x_exp_perc), <span class="fu">aes</span>(<span class="at">x =</span>x_exp_perc)) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">100</span>, <span class="at">fill =</span> col_main[<span class="dv">13</span>]) <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"distribution of percentiles"</span>) <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>exp_raw <span class="sc">+</span> exp_perc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This can get annoying sometimes e.g.&nbsp;when doctors act as if no one should be on the lowest percentiles (me and many of my friends have heard that plenty of times). Well, someone has to be on the lowest percentiles, that’s how percentiles work! And just as many people will be in the 1st percentile as there will be in the 50th percentile. This can be understandable from the perspective of individuals (no one wants to be the one having to deal with e.g.&nbsp;with kids with weight from the 1st percentile) but makes no sense once you look from a broader perspective.</p>
+</section>
+<section id="spacing-between-percentiles" class="level2">
+<h2 class="anchored" data-anchor-id="spacing-between-percentiles">Spacing between percentiles</h2>
+<p>One thing that is often forgotten about the percentile scales is that there can be different spacings between various percentiles. Lets calculate the values for percentiles and then get differences between subsequent percentiles to look at this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>x_percentiles <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="at">probs =</span> <span class="fu">seq</span>(.<span class="dv">01</span>, <span class="dv">1</span>, .<span class="dv">01</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>x_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x_percentiles) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc_lag =</span> <span class="fu">lag</span>(x_percentiles),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">difference_1 =</span> x_percentiles <span class="sc">-</span> perc_lag)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>x_df <span class="sc">%&gt;%</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">100</span>, <span class="at">y =</span> difference_1)) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> col_main[<span class="dv">13</span>]) <span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"difference"</span>) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You can see that the differences are quite large for the first few and last few percentiles and are pretty small for the rest. This is exactly what we would expect with a gaussian distribution of raw values.</p>
+<p>Lets try to overlay the percentiles on the gaussian distribution we drew our data from</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(x) <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(x)) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">color =</span> col_main[<span class="dv">13</span>], <span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> x_df, <span class="fu">aes</span>(<span class="at">xintercept =</span> x_percentiles), <span class="at">color =</span> col_main[<span class="dv">15</span>]) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Spacing of percentiles"</span>, <span class="at">subtitle =</span> <span class="st">"Original distribution (thick red line) has percentiles</span><span class="sc">\n</span><span class="st">overlayed as vertical lines (pink)"</span>) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You can see how much of the distribution falls into 1st, 2nd or 99th percentile and how little falls into a single percentile in the middle of the distribution. It’s actually fairly intuitive why this happens. The same number of people have to fall into each percentile and if there are few people at the tails of the distribution then we need to widen the range of the percentiles there to get enough people. The opposite is true for the peak of the distribution. There are a lot of people there so a slim sliver of the distribution is enough to get quite a few people into the percentile. Note that the 100th percentile is so far away because the <code>quantile</code> function records the higher boundary of the percentile rather than the middle so it has to end at the very far end of the distribution.</p>
+<p>One very important consequence of this is that percentiles are pretty much ranks (see <a href="https://www.jstor.org/stable/pdf/27524716.pdf">here</a> for an good old text on the matter) and should be treated more as ordinal than interval scales which can be a bit unintuitive at first (see <a href="https://files.eric.ed.gov/fulltext/ED363637.pdf">here</a> for the perils of forgetting about that).</p>
+<p>This also means that if some value increases over time from a very low percentile with a steady pace then we might expect first slow increases in percentiles, then rapid increases around the middle of the distribution and again slower increases as we are reaching the top. Lets try simulating that:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' generate initial small x</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' run a for loop in which we:</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' - increase the value of x</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' - record its percentile now and save it</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' - store percentile for each step</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>x_init <span class="ot">&lt;-</span> <span class="fu">min</span>(x) <span class="co">#start with the lowest value in our distribution</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>perc_progress <span class="ot">&lt;-</span> <span class="fu">c</span>() <span class="co">#create a vector to store percentiles</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>) { <span class="co"># max of 1000 steps</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  x_init <span class="ot">&lt;-</span> x_init <span class="sc">+</span> .<span class="dv">1</span> <span class="co">#increase our value by .1</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  perc_value <span class="ot">&lt;-</span> <span class="fu">min</span>(x_percentiles[<span class="fu">which</span>(x_percentiles <span class="sc">&gt;</span> x_init)]) <span class="co"># get the percentile value</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  percentile <span class="ot">&lt;-</span> <span class="fu">names</span>(x_percentiles[<span class="fu">which</span>(x_percentiles <span class="sc">==</span> perc_value)]) <span class="co"># get the percentile name</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  perc_progress <span class="ot">&lt;-</span> <span class="fu">c</span>(perc_progress, percentile) <span class="co"># we want to stop if we get too close to max value and there are still iterations left (otherwise the min() function breaks)</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (x_init <span class="sc">&gt;=</span>(<span class="fu">max</span>(x) <span class="sc">-</span> .<span class="dv">1</span>)) {</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">break</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>perc_progress<span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(perc_progress, <span class="st">"[0-9]+"</span>))</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(perc_progress) <span class="sc">%&gt;%</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(perc_progress), <span class="at">y =</span> perc_progress)) <span class="sc">+</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> col_main[<span class="dv">12</span>], <span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"iteration"</span>, <span class="at">y =</span> <span class="st">"percentile"</span>) <span class="sc">+</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Exactly what we would expect! First the change in percentiles is slow, then it speeds up and slows down in the right half of the plot. It takes us a long time to get out of the lowest percentiles but once we do we quickly get to the 50th and start changing more slowly form there on.</p>
+<section id="variability-in-percentiles" class="level3">
+<h3 class="anchored" data-anchor-id="variability-in-percentiles">variability in percentiles</h3>
+<p>One significant consequence of how differences between subsequent percentiles vary is how much variability in percentiles can we expect with the same amount of variability on the original scale depending on where we start.</p>
+<p>This is a common thing when infants gain weight. They might be gaining weight by some amount plus some random variations (lots of reasons here - some things in the diet, baby pooped/peed before being weighed etc.). In low or high percentiles we might expect this random variation in how much they gain weight to matter little. However in the middle it will make the variation in percentiles seem bigger. Again lets simulate some random variation around our distribution of x with 3 starting places: low (5th), middle (50th) and high percentile (95th). We will run 100 simulations for each starting place and each simulation has 500 iterations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>simulate_variability <span class="ot">&lt;-</span> <span class="cf">function</span>(init_perc, sd_change, <span class="at">n_iter =</span> <span class="dv">500</span>) {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  x_init <span class="ot">&lt;-</span> x_percentiles[init_perc] <span class="co">#start with the lowest value in our distribution</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>perc_progress <span class="ot">&lt;-</span> <span class="fu">c</span>() <span class="co">#create a vector to store percentiles</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter) { <span class="co"># max of 1000 steps</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  x_init <span class="ot">&lt;-</span> x_init <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sd_change) <span class="co">#increase our value by .1</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  perc_value <span class="ot">&lt;-</span> <span class="fu">min</span>(x_percentiles[<span class="fu">which</span>(x_percentiles <span class="sc">&gt;</span> x_init)]) <span class="co"># get the percentile value</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  percentile <span class="ot">&lt;-</span> <span class="fu">names</span>(x_percentiles[<span class="fu">which</span>(x_percentiles <span class="sc">==</span> perc_value)]) <span class="co"># get the percentile name</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  perc_progress <span class="ot">&lt;-</span> <span class="fu">c</span>(perc_progress, percentile) <span class="co"># we want to stop if we get too close to max value and there are still iterations left (otherwise the min() function breaks)</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (x_init <span class="sc">&gt;=</span>(<span class="fu">max</span>(x) <span class="sc">-</span> .<span class="dv">1</span>) <span class="sc">|</span> x_init <span class="sc">&lt;=</span> (<span class="fu">min</span>(x) <span class="sc">+</span> .<span class="dv">1</span>)) {</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">break</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  perc_progress<span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(perc_progress, <span class="st">"[0-9]+"</span>))</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(perc_progress)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>simulate_growth <span class="ot">&lt;-</span> <span class="cf">function</span>(perc, <span class="at">n_iter =</span> <span class="dv">500</span>, <span class="at">n_runs =</span> <span class="dv">100</span>) {</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_runs) {</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    prog<span class="ot">&lt;-</span> <span class="fu">simulate_variability</span>(perc, .<span class="dv">02</span>, n_iter)</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df, prog)</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(df) <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n_iter</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>run <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n_runs</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>  df_long <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="fu">c</span>(run), <span class="at">names_to =</span> <span class="st">"iter"</span>, <span class="at">values_to =</span> <span class="st">"percentile"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">condition =</span> <span class="fu">as.character</span>(perc),</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>           <span class="at">iter =</span> <span class="fu">as.numeric</span>(iter))</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>df_l <span class="ot">&lt;-</span> <span class="fu">simulate_growth</span>(<span class="dv">5</span>)</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>df_m <span class="ot">&lt;-</span> <span class="fu">simulate_growth</span>(<span class="dv">50</span>)</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>df_h <span class="ot">&lt;-</span> <span class="fu">simulate_growth</span>(<span class="dv">95</span>)</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>df_joined <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(df_l, df_m, df_h)</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>df_joined <span class="sc">%&gt;%</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(iter), <span class="at">y =</span> percentile, <span class="at">group =</span> <span class="fu">as.factor</span>(run))) <span class="sc">+</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">alpha =</span> .<span class="dv">4</span>, <span class="at">color =</span> col_main[<span class="dv">13</span>]) <span class="sc">+</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>condition) <span class="sc">+</span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Simulating variability in 5th, 50th and 95th percentile"</span>,</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"iteration"</span>) <span class="sc">+</span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You can see a lot more variability in the middle panel than in the left or right ones even though the changes on the original scale come from the same distribution. We can also get the average range (difference between highest and lowest percentile on a given run):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_joined <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(condition, run) <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">range =</span> <span class="fu">max</span>(percentile) <span class="sc">-</span> <span class="fu">min</span>(percentile)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_range =</span> <span class="fu">mean</span>(range)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="vzvgnplayc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vzvgnplayc table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#vzvgnplayc thead, #vzvgnplayc tbody, #vzvgnplayc tfoot, #vzvgnplayc tr, #vzvgnplayc td, #vzvgnplayc th {
+  border-style: none;
+}
+
+#vzvgnplayc p {
+  margin: 0;
+  padding: 0;
+}
+
+#vzvgnplayc .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#vzvgnplayc .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#vzvgnplayc .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#vzvgnplayc .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#vzvgnplayc .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vzvgnplayc .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vzvgnplayc .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vzvgnplayc .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#vzvgnplayc .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#vzvgnplayc .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#vzvgnplayc .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#vzvgnplayc .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#vzvgnplayc .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#vzvgnplayc .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#vzvgnplayc .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#vzvgnplayc .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#vzvgnplayc .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#vzvgnplayc .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#vzvgnplayc .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vzvgnplayc .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#vzvgnplayc .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#vzvgnplayc .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#vzvgnplayc .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vzvgnplayc .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#vzvgnplayc .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#vzvgnplayc .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vzvgnplayc .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vzvgnplayc .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#vzvgnplayc .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vzvgnplayc .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#vzvgnplayc .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vzvgnplayc .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vzvgnplayc .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vzvgnplayc .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vzvgnplayc .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vzvgnplayc .gt_left {
+  text-align: left;
+}
+
+#vzvgnplayc .gt_center {
+  text-align: center;
+}
+
+#vzvgnplayc .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#vzvgnplayc .gt_font_normal {
+  font-weight: normal;
+}
+
+#vzvgnplayc .gt_font_bold {
+  font-weight: bold;
+}
+
+#vzvgnplayc .gt_font_italic {
+  font-style: italic;
+}
+
+#vzvgnplayc .gt_super {
+  font-size: 65%;
+}
+
+#vzvgnplayc .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#vzvgnplayc .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#vzvgnplayc .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#vzvgnplayc .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#vzvgnplayc .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#vzvgnplayc .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#vzvgnplayc .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#vzvgnplayc .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#vzvgnplayc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="condition" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">condition</th>
+<th id="mean_range" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">mean_range</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="condition">5</td>
+<td class="gt_row gt_right" headers="mean_range">6.64</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="condition">50</td>
+<td class="gt_row gt_right" headers="mean_range">25.13</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="condition">95</td>
+<td class="gt_row gt_right" headers="mean_range">6.40</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>In the above simulation we were in fact not creating any growth, just random variation from the original value (in order to simulate that we would need percentiles for each iteration) but assuming no strange growths that would not change the results a lot (rather than drawing a number from a distribution with mean 0 we would make the mean higher than 0 and still our expectation would be that a person in 50th percentile in time 1 should be on average in 50th percentile in time 2).</p>
+<p>This means that when looking at percentiles e.g.&nbsp;weight gains of babies in low or high percentiles might seem much more stable than of those from the mid percentiles even if in fact they are very similar weight gains.</p>
+</section>
+<section id="simulating-from-real-data" class="level3">
+<h3 class="anchored" data-anchor-id="simulating-from-real-data">Simulating from real data</h3>
+<p>Some data on percentiles of baby weights are actually available online. This means we could check our simulation above with some real data that we can use as a basis for simulating growth. What we will do is:</p>
+<ol type="1">
+<li>get the data that stores a number of percentiles of baby weight at months 0 to 24.</li>
+<li>get approximations of growth at various percentiles (5th, 50th and 95th)</li>
+<li>Get full percentile tables for each timepoint</li>
+<li>Simulate growth at those percentiles to see variability</li>
+</ol>
+<p>Below is a plot of percentiles for male baby weights from birth to 24 months taken from <a href="https://www.cdc.gov/growthcharts/html_charts/wtageinf.htm">CDC</a>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' getting some real data from cdc</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>baby_w <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"baby_weight.tsv"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(baby_w) <span class="ot">&lt;-</span> <span class="fu">trimws</span>(<span class="fu">colnames</span>(baby_w))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>baby_w <span class="ot">&lt;-</span> baby_w <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="st">'3rd'</span><span class="sc">:</span><span class="st">'95th'</span>, as.numeric),</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">months</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">months</span><span class="st">`</span>))</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>baby_w <span class="sc">%&gt;%</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="st">'3rd'</span><span class="sc">:</span><span class="st">'97th'</span>, <span class="at">values_to =</span> <span class="st">"weight"</span>, <span class="at">names_to =</span> <span class="st">"percentile"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percentile =</span> <span class="fu">factor</span>(percentile, <span class="at">ordered =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>                             <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"3rd"</span>, <span class="st">"5th"</span>, <span class="st">"10th"</span>, <span class="st">"25th"</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>                                        <span class="st">"50th"</span>, <span class="st">"75th"</span>, <span class="st">"90th"</span>, <span class="st">"95th"</span>, <span class="st">"97th"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> months, <span class="at">y =</span> weight, <span class="at">color =</span> percentile, <span class="at">group =</span> percentile)) <span class="sc">+</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> col_main[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>]) <span class="sc">+</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Weight percentiles for babies</span><span class="sc">\n</span><span class="st">0-24 months old"</span>,</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Data from CDC"</span>) <span class="sc">+</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Lets try to simulate that. We won’t go to any modelling really but rather use <code>approxfun()</code> to get an approximation of the growth function at a given percentile. Below is the code to get approximation for the 50th percentile. We will do the same at 5th and 95th</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#growth function at 50th</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#get months and weights at 5th, 50th and 95th percentile</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> baby_w<span class="sc">$</span>months</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>weight_50 <span class="ot">&lt;-</span> baby_w<span class="sc">$</span><span class="st">`</span><span class="at">50th</span><span class="st">`</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>weight_5 <span class="ot">&lt;-</span> baby_w<span class="sc">$</span><span class="st">`</span><span class="at">5th</span><span class="st">`</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>weight_95 <span class="ot">&lt;-</span> baby_w<span class="sc">$</span><span class="st">`</span><span class="at">95th</span><span class="st">`</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#make the approximation function</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>fun_5 <span class="ot">&lt;-</span> <span class="fu">approxfun</span>(<span class="at">x =</span> x, <span class="at">y =</span> weight_5)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>fun_50 <span class="ot">&lt;-</span> <span class="fu">approxfun</span>(<span class="at">x =</span> x, <span class="at">y =</span> weight_50)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>fun_95 <span class="ot">&lt;-</span> <span class="fu">approxfun</span>(<span class="at">x =</span> x, <span class="at">y =</span> weight_95)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can run a simple simulation to get some idea if they work ok. We will simulate growth based on our function plus a little random noise. We’ll check the 50th percentile function for brevity:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df_50 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>) {</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  x_1 <span class="ot">&lt;-</span> <span class="fu">fun_50</span>(<span class="dv">0</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  x_1_results <span class="ot">&lt;-</span> <span class="fu">c</span>(x_1)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> (<span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>)) {</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  x_1 <span class="ot">&lt;-</span> x_1 <span class="sc">+</span> <span class="fu">fun_50</span>(x[i<span class="sc">+</span><span class="dv">1</span>]) <span class="sc">-</span> <span class="fu">fun_50</span>(x[i]) <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, .<span class="dv">05</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  x_1_results <span class="ot">&lt;-</span> <span class="fu">c</span>(x_1_results, x_1)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  df_50 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df_50, x_1_results)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(df_50) <span class="ot">&lt;-</span> x</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>df_50 <span class="sc">%&gt;%</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">run =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="fu">c</span>(run), <span class="at">names_to =</span> <span class="st">"month"</span>, <span class="at">values_to =</span> <span class="st">"weight"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">as.numeric</span>(month)) <span class="sc">%&gt;%</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> weight, <span class="at">group =</span> run)) <span class="sc">+</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">color =</span> col_main[<span class="dv">16</span>]) <span class="sc">+</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> baby_w, <span class="fu">aes</span>(<span class="at">x =</span> months, <span class="at">y =</span> <span class="st">`</span><span class="at">50th</span><span class="st">`</span>), <span class="at">color =</span> col_main[<span class="dv">14</span>], <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Simulating data for 50th percentile"</span>,</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"dark blue = actual data, light blue = simulated data"</span>) <span class="sc">+</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Looks pretty good! Now we will need full percentile tables since the cdc data provides only a handful of percentiles. I did that using an approximation for normal distributions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>get_mean_sd <span class="ot">&lt;-</span> <span class="cf">function</span>(perc_50, perc_75) {</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> perc_50</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  sd <span class="ot">&lt;-</span> (perc_75 <span class="sc">-</span> perc_50) <span class="sc">/</span> <span class="fl">0.6744898</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">c</span>(m, sd)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>get_percentiles <span class="ot">&lt;-</span> <span class="cf">function</span>(time) {</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  perc_50 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(baby_w[time,<span class="dv">6</span>])</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  perc_75 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(baby_w[time,<span class="dv">7</span>])</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  msd_01 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">get_mean_sd</span>(perc_50[[<span class="dv">1</span>]], perc_75[[<span class="dv">1</span>]]))</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fl">1e4</span>, msd_01[<span class="dv">1</span>], msd_01[<span class="dv">2</span>])</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>percentiles <span class="ot">&lt;-</span> <span class="fu">quantile</span>(s, <span class="fu">seq</span>(.<span class="dv">01</span>,<span class="dv">1</span>, .<span class="dv">01</span>))</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="fu">return</span>(percentiles)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>percentiles_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">a =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">26</span>) {</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">get_percentiles</span>(i)</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  percentiles_df[,i] <span class="ot">&lt;-</span> p</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>cnames <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"p_"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">26</span>)</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(percentiles_df) <span class="ot">&lt;-</span> cnames</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>percentiles_df<span class="sc">$</span>percentile <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="co">#the dataframe above has percentiles for each .5 month separately</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we can simulate baby growth and check against the percentile tables to see if for middle percentiles growth we will see more variability in percentiles. We will also store the raw weights so that we can look at it as well.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#simulating the growth</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>simulate_from_cdc <span class="ot">&lt;-</span> <span class="cf">function</span>(fun, <span class="at">n_iter =</span> <span class="dv">50</span>, <span class="at">variability =</span> .<span class="dv">05</span>) {</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  f <span class="ot">&lt;-</span> <span class="fu">get</span>(fun)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  df_perc <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  df_raw <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  perc_origin <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(fun, <span class="st">"[0-9]+"</span>))</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter) {</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    init <span class="ot">&lt;-</span> <span class="fu">f</span>(x[<span class="dv">1</span>])</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    raw <span class="ot">&lt;-</span> <span class="fu">c</span>(init)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    results <span class="ot">&lt;-</span> <span class="fu">c</span>(perc_origin) <span class="co">#need to extract the percentile from the function name the percentile </span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>) {</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>      init <span class="ot">&lt;-</span> init <span class="sc">+</span> <span class="fu">f</span>(x[i<span class="sc">+</span><span class="dv">1</span>]) <span class="sc">-</span> <span class="fu">f</span>(x[i]) <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, variability)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>      perc_value <span class="ot">&lt;-</span> <span class="fu">min</span>(percentiles_df[<span class="fu">which</span>(percentiles_df[,i<span class="sc">+</span><span class="dv">1</span>] <span class="sc">&gt;</span> init), i<span class="sc">+</span><span class="dv">1</span>]) <span class="co"># get the percentile value</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>      perc <span class="ot">&lt;-</span> percentiles_df[<span class="fu">which</span>(percentiles_df[,i <span class="sc">+</span><span class="dv">1</span> ] <span class="sc">==</span> perc_value), <span class="st">"percentile"</span>] <span class="co"># get the percentile name</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>      results <span class="ot">&lt;-</span> <span class="fu">c</span>(results, perc)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>      raw <span class="ot">&lt;-</span> <span class="fu">c</span>(raw, init)</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    df_perc <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df_perc, results)</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    df_raw <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df_raw, raw)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(df_perc) <span class="ot">&lt;-</span> x</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  df_perc<span class="sc">$</span>run <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n_iter</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  df_perc_long <span class="ot">&lt;-</span> df_perc <span class="sc">%&gt;%</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="fu">c</span>(run), <span class="at">names_to =</span> <span class="st">"month"</span>, <span class="at">values_to =</span> <span class="st">"percentile"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">as.numeric</span>(month),</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>           <span class="at">condition =</span> perc_origin) </span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(df_raw) <span class="ot">&lt;-</span> x</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  df_raw<span class="sc">$</span>run <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n_iter</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>  df_raw_long <span class="ot">&lt;-</span> df_raw <span class="sc">%&gt;%</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="fu">c</span>(run), <span class="at">names_to =</span> <span class="st">"month"</span>, <span class="at">values_to =</span> <span class="st">"weight"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">as.numeric</span>(month),</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>           <span class="at">condition =</span> perc_origin)</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>  df_perc_long<span class="sc">$</span>weight <span class="ot">&lt;-</span> df_raw_long<span class="sc">$</span>weight</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(df_perc_long)</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>df_cdc_l <span class="ot">&lt;-</span> <span class="fu">simulate_from_cdc</span>(<span class="st">"fun_5"</span>)</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>df_cdc_m <span class="ot">&lt;-</span> <span class="fu">simulate_from_cdc</span>(<span class="st">"fun_50"</span>)</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>df_cdc_h <span class="ot">&lt;-</span> <span class="fu">simulate_from_cdc</span>(<span class="st">"fun_95"</span>)</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>df_cdc_joined <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(df_cdc_l, df_cdc_m, df_cdc_h)</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>df_cdc_joined <span class="sc">%&gt;%</span></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> percentile, <span class="at">group =</span> run)) <span class="sc">+</span></span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">color =</span> col_main[<span class="dv">16</span>]) <span class="sc">+</span></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>condition) <span class="sc">+</span></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Simulating growth in percentiles"</span>) <span class="sc">+</span></span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We got very similar results to our earlier simulation! Middle panel show much larger variability in percentiles compared to the left and right ones. We can also get the average range in percentiles.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>df_cdc_joined <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(condition, run) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">range =</span> <span class="fu">max</span>(percentile) <span class="sc">-</span> <span class="fu">min</span>(percentile)) <span class="sc">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_range =</span> <span class="fu">mean</span>(range)) <span class="sc">%&gt;%</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="djxsihgdzi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#djxsihgdzi table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#djxsihgdzi thead, #djxsihgdzi tbody, #djxsihgdzi tfoot, #djxsihgdzi tr, #djxsihgdzi td, #djxsihgdzi th {
+  border-style: none;
+}
+
+#djxsihgdzi p {
+  margin: 0;
+  padding: 0;
+}
+
+#djxsihgdzi .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#djxsihgdzi .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#djxsihgdzi .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#djxsihgdzi .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#djxsihgdzi .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#djxsihgdzi .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#djxsihgdzi .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#djxsihgdzi .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#djxsihgdzi .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#djxsihgdzi .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#djxsihgdzi .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#djxsihgdzi .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#djxsihgdzi .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#djxsihgdzi .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#djxsihgdzi .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#djxsihgdzi .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#djxsihgdzi .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#djxsihgdzi .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#djxsihgdzi .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#djxsihgdzi .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#djxsihgdzi .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#djxsihgdzi .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#djxsihgdzi .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#djxsihgdzi .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#djxsihgdzi .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#djxsihgdzi .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#djxsihgdzi .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#djxsihgdzi .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#djxsihgdzi .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#djxsihgdzi .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#djxsihgdzi .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#djxsihgdzi .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#djxsihgdzi .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#djxsihgdzi .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#djxsihgdzi .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#djxsihgdzi .gt_left {
+  text-align: left;
+}
+
+#djxsihgdzi .gt_center {
+  text-align: center;
+}
+
+#djxsihgdzi .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#djxsihgdzi .gt_font_normal {
+  font-weight: normal;
+}
+
+#djxsihgdzi .gt_font_bold {
+  font-weight: bold;
+}
+
+#djxsihgdzi .gt_font_italic {
+  font-style: italic;
+}
+
+#djxsihgdzi .gt_super {
+  font-size: 65%;
+}
+
+#djxsihgdzi .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#djxsihgdzi .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#djxsihgdzi .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#djxsihgdzi .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#djxsihgdzi .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#djxsihgdzi .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#djxsihgdzi .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#djxsihgdzi .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#djxsihgdzi div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="condition" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">condition</th>
+<th id="mean_range" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">mean_range</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="condition">5</td>
+<td class="gt_row gt_right" headers="mean_range">5.76</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="condition">50</td>
+<td class="gt_row gt_right" headers="mean_range">11.94</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="condition">95</td>
+<td class="gt_row gt_right" headers="mean_range">3.04</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>We could compare this against actual growth in weight to see if there is more variability in 50th percentile (there should not be much):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df_cdc_joined <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> weight, <span class="at">group =</span> run)) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">color =</span> col_main[<span class="dv">16</span>]) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>condition) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"raw weight growth in 5th, 50th and 95th percentile"</span>) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>It does not seem like there is more variability in growth in the middle category when we look at .</p>
+</section>
+<section id="some-caveats-and-what-is-the-point" class="level3">
+<h3 class="anchored" data-anchor-id="some-caveats-and-what-is-the-point">some caveats and what is the point</h3>
+<p>All of the above of course depends not just on the data that we got from cdc but also on our assumed model of growth which is probably pretty simplistic. Can we assume constant random variability across percentiles and in time? I think the first one is easier but I don’t think it would undermine the point a lot if variability in time changed as long as it was the same across all percentiles.</p>
+<p>A more important point that is the drive home message is that you can’t forget about the original distribution of raw values when working with percentiles. If in the simulations above we were working with a different distribution then the variability in percentiles would look different. For example for a bimodal distribution we would see the exact opposite from what happens with a normal distribution - the greater variability would be at lowest and highest percentiles.</p>
+</section>
+</section>
+<section id="correlations-with-percentiles" class="level2">
+<h2 class="anchored" data-anchor-id="correlations-with-percentiles">Correlations with percentiles</h2>
+<p>The last thing worth looking at when working with percentile scales are some unintuitive things about correlations on percentile scales.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, .<span class="dv">6</span><span class="sc">*</span>x)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>y_perc <span class="ot">&lt;-</span> <span class="fu">ntile</span>(y, <span class="dv">100</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>x_perc <span class="ot">&lt;-</span> <span class="fu">ntile</span>(x, <span class="dv">100</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, y, x_perc, y_perc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Lets start by looking at a simple scatterplot:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">color =</span> col_main[<span class="dv">13</span>]) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"correlation = "</span>,<span class="fu">as.character</span>(<span class="fu">round</span>(<span class="fu">cor</span>(x, y), <span class="dv">2</span>)))) <span class="sc">+</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now lets look at the percentiles:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x_perc, <span class="at">y =</span> y_perc)) <span class="sc">+</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">color =</span> col_main[<span class="dv">13</span>]) <span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"correlation = "</span>,<span class="fu">as.character</span>(<span class="fu">round</span>(<span class="fu">cor</span>(x_perc, y_perc), <span class="dv">2</span>)))) <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>looks a loot more noisy right? But the correlation is pretty much the same. This can be pretty confusing and is actually sometimes done in those “guess the correlation from the scatterplot” games.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/mic-wypych\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
