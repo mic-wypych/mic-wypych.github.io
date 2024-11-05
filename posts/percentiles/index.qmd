@@ -14,6 +14,8 @@ knitr::opts_chunk$set(echo=TRUE, message = FALSE, warning=FALSE)
 ```
 
 ```{r}
+#| code-fold: true
+#| code-summary: "setup"
 library(ggplot2)
 library(readr)
 library(dplyr)
@@ -62,6 +64,8 @@ x_perc <- ntile(x, 100)
 Lets start by looking at simple distributions. This one should be fairly obvious but I feel like it still gets forgotten way to often. How does a distribution of percentiles look like? Lets start with raw x and how it looks like:
 
 ```{r}
+#| code-fold: true
+#| code-summary: "raw normal histogram"
 ggplot(data.frame(x), aes(x =x )) +
   geom_histogram(fill = col_main[13]) +
   labs(title = "distribution of raw values") +
@@ -71,6 +75,8 @@ ggplot(data.frame(x), aes(x =x )) +
 Nice and friendly normal distribution. So how does a percentile distribution look like?
 
 ```{r}
+#| code-fold: true
+#| code-summary: "percentile normal histogram"
 ggplot(data.frame(x_perc), aes(x =x_perc )) +
   geom_histogram(bins = 100, fill = col_main[13]) +
   labs(title = "distribution of percentiles") +
@@ -80,6 +86,8 @@ ggplot(data.frame(x_perc), aes(x =x_perc )) +
 It's perfectly flat! Percentiles will always look like this because, well... by definition they are percentages so the same number of observations into each percentile. We can change the original distribution but it won't affect the percentile much. We can see it e.g. with exponential distribution:
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Exponential histograms"
 x_exp <- rexp(N, 3)
 x_exp_perc <- ntile(x_exp, 100)
 
@@ -103,6 +111,9 @@ This can get annoying sometimes e.g. when doctors act as if no one should be on 
 One thing that is often forgotten about the percentile scales is that there can be different spacings between various percentiles. Lets calculate the values for percentiles and then get differences between subsequent percentiles to look at this:
 
 ```{r}
+#| code-fold: true
+#| code-summary: "spacing"
+
 x_percentiles <- quantile(x, probs = seq(.01, 1, .01))
 
 x_df <- data.frame(x_percentiles) %>%
@@ -122,11 +133,14 @@ You can see that the differences are quite large for the first few and last few 
 Lets try to overlay the percentiles on the gaussian distribution we drew our data from
 
 ```{r}
+#| code-fold: true
+#| code-summary: "percentile spacing"
+
 as.data.frame(x) |>
   ggplot(aes(x)) +
   geom_density(color = col_main[13], linewidth = 2) +
   geom_vline(data = x_df, aes(xintercept = x_percentiles), color = col_main[15]) +
-  labs(title = "Spacing of percentiles", subtitle = "Original distribution (thick red line) has percentiles\noverlayed as vertical lines (pink)") +
+  labs(title = "Spacing of percentiles", subtitle = "Original distribution (thick blue line) has percentiles\noverlayed as vertical lines (dark blue)") +
   my_theme()
 ```
 
@@ -137,12 +151,9 @@ One very important consequence of this is that percentiles are pretty much ranks
 This also means that if some value increases over time from a very low percentile with a steady pace then we might expect first slow increases in percentiles, then rapid increases around the middle of the distribution and again slower increases as we are reaching the top. Lets try simulating that:
 
 ```{r}
-#' generate initial small x
-#' run a for loop in which we:
-#' - increase the value of x
-#' - record its percentile now and save it
-#' - store percentile for each step
-#' 
+#| code-fold: true
+#| code-summary: "1st simulation"
+
 
 x_init <- min(x) #start with the lowest value in our distribution
 perc_progress <- c() #create a vector to store percentiles
@@ -174,7 +185,9 @@ One significant consequence of how differences between subsequent percentiles va
 This is a common thing when infants gain weight. They might be gaining weight by some amount plus some random variations (lots of reasons here - some things in the diet, baby pooped/peed before being weighed etc.). In low or high percentiles we might expect this random variation in how much they gain weight to matter little. However in the middle it will make the variation in percentiles seem bigger. Again lets simulate some random variation around our distribution of x with 3 starting places: low (5th), middle (50th) and high percentile (95th). We will run 100 simulations for each starting place and each simulation has 500 iterations.
 
 ```{r}
-
+#| code-fold: true
+#| code-summary: "2nd simulation"
+#| 
 simulate_variability <- function(init_perc, sd_change, n_iter = 500) {
   x_init <- x_percentiles[init_perc] #start with the lowest value in our distribution
 perc_progress <- c() #create a vector to store percentiles
@@ -227,6 +240,8 @@ df_joined %>%
 You can see a lot more variability in the middle panel than in the left or right ones even though the changes on the original scale come from the same distribution. We can also get the average range (difference between highest and lowest percentile on a given run):
 
 ```{r}
+#| code-fold: true
+#| code-summary: "mean range of percentiles"
 df_joined %>%
   group_by(condition, run) %>%
   summarise(range = max(percentile) - min(percentile)) %>%
@@ -250,8 +265,8 @@ Some data on percentiles of baby weights are actually available online. This mea
 Below is a plot of percentiles for male baby weights from birth to 24 months taken from [CDC](https://www.cdc.gov/growthcharts/html_charts/wtageinf.htm):
 
 ```{r}
-#' getting some real data from cdc
-#' 
+#| code-fold: true
+#| code-summary: "cdc data"
 
 baby_w <- read_delim("baby_weight.tsv")
 colnames(baby_w) <- trimws(colnames(baby_w))
@@ -276,6 +291,8 @@ baby_w %>%
 Lets try to simulate that. We won't go to any modelling really but rather use `approxfun()` to get an approximation of the growth function at a given percentile. Below is the code to get approximation for the 50th percentile. We will do the same at 5th and 95th
 
 ```{r}
+#| code-fold: true
+#| code-summary: "approximating growth"
 #growth function at 50th
 #get months and weights at 5th, 50th and 95th percentile
 x <- baby_w$months
@@ -293,7 +310,8 @@ fun_95 <- approxfun(x = x, y = weight_95)
 We can run a simple simulation to get some idea if they work ok. We will simulate growth based on our function plus a little random noise. We'll check the 50th percentile function for brevity:
 
 ```{r}
-
+#| code-fold: true
+#| code-summary: "50th percentile check"
 
 df_50 <- data.frame()
 for (i in 1:50) {
@@ -312,7 +330,7 @@ df_50 %>%
   pivot_longer(-c(run), names_to = "month", values_to = "weight") %>%
   mutate(month = as.numeric(month)) %>%
   ggplot(aes(x = month, y = weight, group = run)) +
-  geom_line(alpha = .3, color = col_main[16]) +
+  geom_line(alpha = .3, color = col_main[12]) +
   geom_line(data = baby_w, aes(x = months, y = `50th`), color = col_main[14], linewidth = 1, inherit.aes = FALSE) +
   labs(title = "Simulating data for 50th percentile",
        subtitle = "dark blue = actual data, light blue = simulated data") +
@@ -322,7 +340,8 @@ df_50 %>%
 Looks pretty good! Now we will need full percentile tables since the cdc data provides only a handful of percentiles. I did that using an approximation for normal distributions.
 
 ```{r}
-
+#| code-fold: true
+#| code-summary: "full percentile grid"
 
 get_mean_sd <- function(perc_50, perc_75) {
   m <- perc_50
@@ -358,6 +377,8 @@ percentiles_df$percentile <- 1:100
 Now we can simulate baby growth and check against the percentile tables to see if for middle percentiles growth we will see more variability in percentiles. We will also store the raw weights so that we can look at it as well.
 
 ```{r}
+#| code-fold: true
+#| code-summary: "cdc simulation"
 #simulating the growth
 
 simulate_from_cdc <- function(fun, n_iter = 50, variability = .05) {
@@ -418,6 +439,8 @@ df_cdc_joined %>%
 We got very similar results to our earlier simulation! Middle panel show much larger variability in percentiles compared to the left and right ones. We can also get the average range in percentiles.
 
 ```{r}
+#| code-fold: true
+#| code-summary: "mean ranges from cdc sim"
 df_cdc_joined %>%
   group_by(condition, run) %>%
   summarise(range = max(percentile) - min(percentile)) %>%
@@ -428,6 +451,8 @@ df_cdc_joined %>%
 We could compare this against actual growth in weight to see if there is more variability in 50th percentile (there should not be much):
 
 ```{r}
+#| code-fold: true
+#| code-summary: "comparing raw growth"
 df_cdc_joined %>%
   ggplot(aes(x = month, y = weight, group = run)) +
   geom_line(alpha = .3, color = col_main[16]) +
@@ -449,6 +474,8 @@ A more important point that is the drive home message is that you can't forget a
 The last thing worth looking at when working with percentile scales are some unintuitive things about correlations on percentile scales.
 
 ```{r}
+#| code-fold: true
+#| code-summary: "correlation setup"
 x <- rnorm(N)
 y <- rnorm(N, .6*x)
 
@@ -460,6 +487,8 @@ d <- data.frame(x, y, x_perc, y_perc)
 Lets start by looking at a simple scatterplot:
 
 ```{r}
+#| code-fold: true
+#| code-summary: "raw scatterplot"
 d |>
   ggplot(aes(x = x, y = y)) +
   geom_point(alpha = .3, color = col_main[13]) +
@@ -473,6 +502,8 @@ d |>
 Now lets look at the percentiles:
 
 ```{r}
+#| code-fold: true
+#| code-summary: "percentile scatterplot"
 d |>
   ggplot(aes(x = x_perc, y = y_perc)) +
   geom_point(alpha = .3, color = col_main[13]) +
