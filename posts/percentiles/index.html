@@ -165,7 +165,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">A few remarks on percentile scales</h1>
-                      </div>
+                                <div class="quarto-categories">
+                <div class="quarto-category">statistics</div>
+                <div class="quarto-category">simulation</div>
+              </div>
+                  </div>
   </div>
     
   
@@ -212,6 +216,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>So this post was born out of annoyance with dealing with percentile grids for baby weights and how easily they are misunderstood. What I want to show are some more or less unintuitive features of percentiles scales especially having to do with how the distribution for percentiles looks like and how spacing between percentiles affects potential variability (e.g.&nbsp;in change) depending on where we are on the percentile scale.</p>
 <p>Below is the setup chunk with some functions for plots and loaded packages</p>
 <div class="cell">
+<details class="code-fold">
+<summary>setup</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
@@ -242,6 +248,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
 <span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>          <span class="at">plot.title.position =</span> <span class="st">"plot"</span>)</span>
 <span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>First lets generate some data from a normal distribution and set the random seed.</p>
 <div class="cell">
@@ -256,10 +263,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="looking-at-marginal-distributions">looking at marginal distributions</h2>
 <p>Lets start by looking at simple distributions. This one should be fairly obvious but I feel like it still gets forgotten way to often. How does a distribution of percentiles look like? Lets start with raw x and how it looks like:</p>
 <div class="cell">
+<details class="code-fold">
+<summary>raw normal histogram</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(x), <span class="fu">aes</span>(<span class="at">x =</span>x )) <span class="sc">+</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">fill =</span> col_main[<span class="dv">13</span>]) <span class="sc">+</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"distribution of raw values"</span>) <span class="sc">+</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -270,10 +280,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Nice and friendly normal distribution. So how does a percentile distribution look like?</p>
 <div class="cell">
+<details class="code-fold">
+<summary>percentile normal histogram</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(x_perc), <span class="fu">aes</span>(<span class="at">x =</span>x_perc )) <span class="sc">+</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">100</span>, <span class="at">fill =</span> col_main[<span class="dv">13</span>]) <span class="sc">+</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"distribution of percentiles"</span>) <span class="sc">+</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -284,6 +297,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>It’s perfectly flat! Percentiles will always look like this because, well… by definition they are percentages so the same number of observations into each percentile. We can change the original distribution but it won’t affect the percentile much. We can see it e.g.&nbsp;with exponential distribution:</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Exponential histograms</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x_exp <span class="ot">&lt;-</span> <span class="fu">rexp</span>(N, <span class="dv">3</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>x_exp_perc <span class="ot">&lt;-</span> <span class="fu">ntile</span>(x_exp, <span class="dv">100</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -298,6 +313,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>exp_raw <span class="sc">+</span> exp_perc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -312,6 +328,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="spacing-between-percentiles">Spacing between percentiles</h2>
 <p>One thing that is often forgotten about the percentile scales is that there can be different spacings between various percentiles. Lets calculate the values for percentiles and then get differences between subsequent percentiles to look at this:</p>
 <div class="cell">
+<details class="code-fold">
+<summary>spacing</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>x_percentiles <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="at">probs =</span> <span class="fu">seq</span>(.<span class="dv">01</span>, <span class="dv">1</span>, .<span class="dv">01</span>))</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>x_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x_percentiles) <span class="sc">%&gt;%</span></span>
@@ -324,6 +342,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> col_main[<span class="dv">13</span>]) <span class="sc">+</span></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"difference"</span>) <span class="sc">+</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -335,12 +354,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>You can see that the differences are quite large for the first few and last few percentiles and are pretty small for the rest. This is exactly what we would expect with a gaussian distribution of raw values.</p>
 <p>Lets try to overlay the percentiles on the gaussian distribution we drew our data from</p>
 <div class="cell">
+<details class="code-fold">
+<summary>percentile spacing</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(x) <span class="sc">|&gt;</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(x)) <span class="sc">+</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">color =</span> col_main[<span class="dv">13</span>], <span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> x_df, <span class="fu">aes</span>(<span class="at">xintercept =</span> x_percentiles), <span class="at">color =</span> col_main[<span class="dv">15</span>]) <span class="sc">+</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Spacing of percentiles"</span>, <span class="at">subtitle =</span> <span class="st">"Original distribution (thick red line) has percentiles</span><span class="sc">\n</span><span class="st">overlayed as vertical lines (pink)"</span>) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Spacing of percentiles"</span>, <span class="at">subtitle =</span> <span class="st">"Original distribution (thick blue line) has percentiles</span><span class="sc">\n</span><span class="st">overlayed as vertical lines (dark blue)"</span>) <span class="sc">+</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -353,32 +375,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>One very important consequence of this is that percentiles are pretty much ranks (see <a href="https://www.jstor.org/stable/pdf/27524716.pdf">here</a> for an good old text on the matter) and should be treated more as ordinal than interval scales which can be a bit unintuitive at first (see <a href="https://files.eric.ed.gov/fulltext/ED363637.pdf">here</a> for the perils of forgetting about that).</p>
 <p>This also means that if some value increases over time from a very low percentile with a steady pace then we might expect first slow increases in percentiles, then rapid increases around the middle of the distribution and again slower increases as we are reaching the top. Lets try simulating that:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' generate initial small x</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' run a for loop in which we:</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' - increase the value of x</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' - record its percentile now and save it</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' - store percentile for each step</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>x_init <span class="ot">&lt;-</span> <span class="fu">min</span>(x) <span class="co">#start with the lowest value in our distribution</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>perc_progress <span class="ot">&lt;-</span> <span class="fu">c</span>() <span class="co">#create a vector to store percentiles</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>) { <span class="co"># max of 1000 steps</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  x_init <span class="ot">&lt;-</span> x_init <span class="sc">+</span> .<span class="dv">1</span> <span class="co">#increase our value by .1</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  perc_value <span class="ot">&lt;-</span> <span class="fu">min</span>(x_percentiles[<span class="fu">which</span>(x_percentiles <span class="sc">&gt;</span> x_init)]) <span class="co"># get the percentile value</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  percentile <span class="ot">&lt;-</span> <span class="fu">names</span>(x_percentiles[<span class="fu">which</span>(x_percentiles <span class="sc">==</span> perc_value)]) <span class="co"># get the percentile name</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  perc_progress <span class="ot">&lt;-</span> <span class="fu">c</span>(perc_progress, percentile) <span class="co"># we want to stop if we get too close to max value and there are still iterations left (otherwise the min() function breaks)</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (x_init <span class="sc">&gt;=</span>(<span class="fu">max</span>(x) <span class="sc">-</span> .<span class="dv">1</span>)) {</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">break</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>perc_progress<span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(perc_progress, <span class="st">"[0-9]+"</span>))</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(perc_progress) <span class="sc">%&gt;%</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(perc_progress), <span class="at">y =</span> perc_progress)) <span class="sc">+</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> col_main[<span class="dv">12</span>], <span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"iteration"</span>, <span class="at">y =</span> <span class="st">"percentile"</span>) <span class="sc">+</span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>1st simulation</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x_init <span class="ot">&lt;-</span> <span class="fu">min</span>(x) <span class="co">#start with the lowest value in our distribution</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>perc_progress <span class="ot">&lt;-</span> <span class="fu">c</span>() <span class="co">#create a vector to store percentiles</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>) { <span class="co"># max of 1000 steps</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  x_init <span class="ot">&lt;-</span> x_init <span class="sc">+</span> .<span class="dv">1</span> <span class="co">#increase our value by .1</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  perc_value <span class="ot">&lt;-</span> <span class="fu">min</span>(x_percentiles[<span class="fu">which</span>(x_percentiles <span class="sc">&gt;</span> x_init)]) <span class="co"># get the percentile value</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  percentile <span class="ot">&lt;-</span> <span class="fu">names</span>(x_percentiles[<span class="fu">which</span>(x_percentiles <span class="sc">==</span> perc_value)]) <span class="co"># get the percentile name</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  perc_progress <span class="ot">&lt;-</span> <span class="fu">c</span>(perc_progress, percentile) <span class="co"># we want to stop if we get too close to max value and there are still iterations left (otherwise the min() function breaks)</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (x_init <span class="sc">&gt;=</span>(<span class="fu">max</span>(x) <span class="sc">-</span> .<span class="dv">1</span>)) {</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">break</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>perc_progress<span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(perc_progress, <span class="st">"[0-9]+"</span>))</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(perc_progress) <span class="sc">%&gt;%</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(perc_progress), <span class="at">y =</span> perc_progress)) <span class="sc">+</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> col_main[<span class="dv">12</span>], <span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"iteration"</span>, <span class="at">y =</span> <span class="st">"percentile"</span>) <span class="sc">+</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -393,6 +411,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>One significant consequence of how differences between subsequent percentiles vary is how much variability in percentiles can we expect with the same amount of variability on the original scale depending on where we start.</p>
 <p>This is a common thing when infants gain weight. They might be gaining weight by some amount plus some random variations (lots of reasons here - some things in the diet, baby pooped/peed before being weighed etc.). In low or high percentiles we might expect this random variation in how much they gain weight to matter little. However in the middle it will make the variation in percentiles seem bigger. Again lets simulate some random variation around our distribution of x with 3 starting places: low (5th), middle (50th) and high percentile (95th). We will run 100 simulations for each starting place and each simulation has 500 iterations.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>2nd simulation</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>simulate_variability <span class="ot">&lt;-</span> <span class="cf">function</span>(init_perc, sd_change, <span class="at">n_iter =</span> <span class="dv">500</span>) {</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  x_init <span class="ot">&lt;-</span> x_percentiles[init_perc] <span class="co">#start with the lowest value in our distribution</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>perc_progress <span class="ot">&lt;-</span> <span class="fu">c</span>() <span class="co">#create a vector to store percentiles</span></span>
@@ -440,6 +460,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Simulating variability in 5th, 50th and 95th percentile"</span>,</span>
 <span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"iteration"</span>) <span class="sc">+</span></span>
 <span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -450,11 +471,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>You can see a lot more variability in the middle panel than in the left or right ones even though the changes on the original scale come from the same distribution. We can also get the average range (difference between highest and lowest percentile on a given run):</p>
 <div class="cell">
+<details class="code-fold">
+<summary>mean range of percentiles</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_joined <span class="sc">%&gt;%</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(condition, run) <span class="sc">%&gt;%</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">range =</span> <span class="fu">max</span>(percentile) <span class="sc">-</span> <span class="fu">min</span>(percentile)) <span class="sc">%&gt;%</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_range =</span> <span class="fu">mean</span>(range)) <span class="sc">%&gt;%</span></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div id="vzvgnplayc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#vzvgnplayc table {
@@ -946,27 +970,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>Below is a plot of percentiles for male baby weights from birth to 24 months taken from <a href="https://www.cdc.gov/growthcharts/html_charts/wtageinf.htm">CDC</a>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' getting some real data from cdc</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>baby_w <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"baby_weight.tsv"</span>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(baby_w) <span class="ot">&lt;-</span> <span class="fu">trimws</span>(<span class="fu">colnames</span>(baby_w))</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>baby_w <span class="ot">&lt;-</span> baby_w <span class="sc">%&gt;%</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="st">'3rd'</span><span class="sc">:</span><span class="st">'95th'</span>, as.numeric),</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">months</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">months</span><span class="st">`</span>))</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>baby_w <span class="sc">%&gt;%</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="st">'3rd'</span><span class="sc">:</span><span class="st">'97th'</span>, <span class="at">values_to =</span> <span class="st">"weight"</span>, <span class="at">names_to =</span> <span class="st">"percentile"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percentile =</span> <span class="fu">factor</span>(percentile, <span class="at">ordered =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>                             <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"3rd"</span>, <span class="st">"5th"</span>, <span class="st">"10th"</span>, <span class="st">"25th"</span>,</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>                                        <span class="st">"50th"</span>, <span class="st">"75th"</span>, <span class="st">"90th"</span>, <span class="st">"95th"</span>, <span class="st">"97th"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> months, <span class="at">y =</span> weight, <span class="at">color =</span> percentile, <span class="at">group =</span> percentile)) <span class="sc">+</span></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> col_main[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>]) <span class="sc">+</span></span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Weight percentiles for babies</span><span class="sc">\n</span><span class="st">0-24 months old"</span>,</span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Data from CDC"</span>) <span class="sc">+</span></span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>cdc data</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>baby_w <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"baby_weight.tsv"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(baby_w) <span class="ot">&lt;-</span> <span class="fu">trimws</span>(<span class="fu">colnames</span>(baby_w))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>baby_w <span class="ot">&lt;-</span> baby_w <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="st">'3rd'</span><span class="sc">:</span><span class="st">'95th'</span>, as.numeric),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">months</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">months</span><span class="st">`</span>))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>baby_w <span class="sc">%&gt;%</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="st">'3rd'</span><span class="sc">:</span><span class="st">'97th'</span>, <span class="at">values_to =</span> <span class="st">"weight"</span>, <span class="at">names_to =</span> <span class="st">"percentile"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percentile =</span> <span class="fu">factor</span>(percentile, <span class="at">ordered =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>                             <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"3rd"</span>, <span class="st">"5th"</span>, <span class="st">"10th"</span>, <span class="st">"25th"</span>,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>                                        <span class="st">"50th"</span>, <span class="st">"75th"</span>, <span class="st">"90th"</span>, <span class="st">"95th"</span>, <span class="st">"97th"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> months, <span class="at">y =</span> weight, <span class="at">color =</span> percentile, <span class="at">group =</span> percentile)) <span class="sc">+</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> col_main[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>]) <span class="sc">+</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Weight percentiles for babies</span><span class="sc">\n</span><span class="st">0-24 months old"</span>,</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Data from CDC"</span>) <span class="sc">+</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -977,6 +1001,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Lets try to simulate that. We won’t go to any modelling really but rather use <code>approxfun()</code> to get an approximation of the growth function at a given percentile. Below is the code to get approximation for the 50th percentile. We will do the same at 5th and 95th</p>
 <div class="cell">
+<details class="code-fold">
+<summary>approximating growth</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#growth function at 50th</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#get months and weights at 5th, 50th and 95th percentile</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> baby_w<span class="sc">$</span>months</span>
@@ -988,9 +1014,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>fun_5 <span class="ot">&lt;-</span> <span class="fu">approxfun</span>(<span class="at">x =</span> x, <span class="at">y =</span> weight_5)</span>
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>fun_50 <span class="ot">&lt;-</span> <span class="fu">approxfun</span>(<span class="at">x =</span> x, <span class="at">y =</span> weight_50)</span>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>fun_95 <span class="ot">&lt;-</span> <span class="fu">approxfun</span>(<span class="at">x =</span> x, <span class="at">y =</span> weight_95)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>We can run a simple simulation to get some idea if they work ok. We will simulate growth based on our function plus a little random noise. We’ll check the 50th percentile function for brevity:</p>
 <div class="cell">
+<details class="code-fold">
+<summary>50th percentile check</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df_50 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>) {</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  x_1 <span class="ot">&lt;-</span> <span class="fu">fun_50</span>(<span class="dv">0</span>)</span>
@@ -1008,11 +1037,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="fu">c</span>(run), <span class="at">names_to =</span> <span class="st">"month"</span>, <span class="at">values_to =</span> <span class="st">"weight"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">as.numeric</span>(month)) <span class="sc">%&gt;%</span></span>
 <span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> weight, <span class="at">group =</span> run)) <span class="sc">+</span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">color =</span> col_main[<span class="dv">16</span>]) <span class="sc">+</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">color =</span> col_main[<span class="dv">12</span>]) <span class="sc">+</span></span>
 <span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> baby_w, <span class="fu">aes</span>(<span class="at">x =</span> months, <span class="at">y =</span> <span class="st">`</span><span class="at">50th</span><span class="st">`</span>), <span class="at">color =</span> col_main[<span class="dv">14</span>], <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
 <span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Simulating data for 50th percentile"</span>,</span>
 <span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"dark blue = actual data, light blue = simulated data"</span>) <span class="sc">+</span></span>
 <span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1023,6 +1053,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Looks pretty good! Now we will need full percentile tables since the cdc data provides only a handful of percentiles. I did that using an approximation for normal distributions.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>full percentile grid</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>get_mean_sd <span class="ot">&lt;-</span> <span class="cf">function</span>(perc_50, perc_75) {</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> perc_50</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  sd <span class="ot">&lt;-</span> (perc_75 <span class="sc">-</span> perc_50) <span class="sc">/</span> <span class="fl">0.6744898</span></span>
@@ -1052,9 +1084,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(percentiles_df) <span class="ot">&lt;-</span> cnames</span>
 <span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>percentiles_df<span class="sc">$</span>percentile <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span></span>
 <span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="co">#the dataframe above has percentiles for each .5 month separately</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>Now we can simulate baby growth and check against the percentile tables to see if for middle percentiles growth we will see more variability in percentiles. We will also store the raw weights so that we can look at it as well.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>cdc simulation</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#simulating the growth</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>simulate_from_cdc <span class="ot">&lt;-</span> <span class="cf">function</span>(fun, <span class="at">n_iter =</span> <span class="dv">50</span>, <span class="at">variability =</span> .<span class="dv">05</span>) {</span>
@@ -1109,6 +1144,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>condition) <span class="sc">+</span></span>
 <span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Simulating growth in percentiles"</span>) <span class="sc">+</span></span>
 <span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1119,11 +1155,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>We got very similar results to our earlier simulation! Middle panel show much larger variability in percentiles compared to the left and right ones. We can also get the average range in percentiles.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>mean ranges from cdc sim</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>df_cdc_joined <span class="sc">%&gt;%</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(condition, run) <span class="sc">%&gt;%</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">range =</span> <span class="fu">max</span>(percentile) <span class="sc">-</span> <span class="fu">min</span>(percentile)) <span class="sc">%&gt;%</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_range =</span> <span class="fu">mean</span>(range)) <span class="sc">%&gt;%</span></span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div id="djxsihgdzi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#djxsihgdzi table {
@@ -1603,12 +1642,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>We could compare this against actual growth in weight to see if there is more variability in 50th percentile (there should not be much):</p>
 <div class="cell">
+<details class="code-fold">
+<summary>comparing raw growth</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df_cdc_joined <span class="sc">%&gt;%</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> weight, <span class="at">group =</span> run)) <span class="sc">+</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">color =</span> col_main[<span class="dv">16</span>]) <span class="sc">+</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>condition) <span class="sc">+</span></span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"raw weight growth in 5th, 50th and 95th percentile"</span>) <span class="sc">+</span></span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1629,20 +1671,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="correlations-with-percentiles">Correlations with percentiles</h2>
 <p>The last thing worth looking at when working with percentile scales are some unintuitive things about correlations on percentile scales.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>correlation setup</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, .<span class="dv">6</span><span class="sc">*</span>x)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>y_perc <span class="ot">&lt;-</span> <span class="fu">ntile</span>(y, <span class="dv">100</span>)</span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>x_perc <span class="ot">&lt;-</span> <span class="fu">ntile</span>(x, <span class="dv">100</span>)</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, y, x_perc, y_perc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>Lets start by looking at a simple scatterplot:</p>
 <div class="cell">
+<details class="code-fold">
+<summary>raw scatterplot</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">color =</span> col_main[<span class="dv">13</span>]) <span class="sc">+</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"correlation = "</span>,<span class="fu">as.character</span>(<span class="fu">round</span>(<span class="fu">cor</span>(x, y), <span class="dv">2</span>)))) <span class="sc">+</span></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1653,11 +1701,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Now lets look at the percentiles:</p>
 <div class="cell">
+<details class="code-fold">
+<summary>percentile scatterplot</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x_perc, <span class="at">y =</span> y_perc)) <span class="sc">+</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">color =</span> col_main[<span class="dv">13</span>]) <span class="sc">+</span></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"correlation = "</span>,<span class="fu">as.character</span>(<span class="fu">round</span>(<span class="fu">cor</span>(x_perc, y_perc), <span class="dv">2</span>)))) <span class="sc">+</span></span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
