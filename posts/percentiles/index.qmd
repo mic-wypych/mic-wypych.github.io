@@ -469,46 +469,4 @@ All of the above of course depends not just on the data that we got from cdc but
 
 A more important point that is the drive home message is that you can't forget about the original distribution of raw values when working with percentiles. If in the simulations above we were working with a different distribution then the variability in percentiles would look different. For example for a bimodal distribution we would see the exact opposite from what happens with a normal distribution - the greater variability would be at lowest and highest percentiles.
 
-## Correlations with percentiles
-
-The last thing worth looking at when working with percentile scales are some unintuitive things about correlations on percentile scales.
-
-```{r}
-#| code-fold: true
-#| code-summary: "correlation setup"
-x <- rnorm(N)
-y <- rnorm(N, .6*x)
-
-y_perc <- ntile(y, 100)
-x_perc <- ntile(x, 100)
-d <- data.frame(x, y, x_perc, y_perc)
-```
-
-Lets start by looking at a simple scatterplot:
-
-```{r}
-#| code-fold: true
-#| code-summary: "raw scatterplot"
-d |>
-  ggplot(aes(x = x, y = y)) +
-  geom_point(alpha = .3, color = col_main[13]) +
-  labs(title = paste0("correlation = ",as.character(round(cor(x, y), 2)))) +
-  my_theme()
-
-
-
-```
-
-Now lets look at the percentiles:
-
-```{r}
-#| code-fold: true
-#| code-summary: "percentile scatterplot"
-d |>
-  ggplot(aes(x = x_perc, y = y_perc)) +
-  geom_point(alpha = .3, color = col_main[13]) +
-  labs(title = paste0("correlation = ",as.character(round(cor(x_perc, y_perc), 2)))) +
-  my_theme()
-```
-
-looks a loot more noisy right? But the correlation is pretty much the same. This can be pretty confusing and is actually sometimes done in those "guess the correlation from the scatterplot" games.
+Maybe if I have the time and some data I will try to make some longitudinal ordinal models (like a Markov model or some multilevel ordinal maybe) to expand on this (something like described by Frank Harrell [here](https://www.fharrell.com/talk/cmstat/)).
