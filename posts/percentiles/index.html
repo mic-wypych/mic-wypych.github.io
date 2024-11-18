@@ -202,7 +202,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#simulating-from-real-data" id="toc-simulating-from-real-data" class="nav-link" data-scroll-target="#simulating-from-real-data">Simulating from real data</a></li>
   <li><a href="#some-caveats-and-what-is-the-point" id="toc-some-caveats-and-what-is-the-point" class="nav-link" data-scroll-target="#some-caveats-and-what-is-the-point">some caveats and what is the point</a></li>
   </ul></li>
-  <li><a href="#correlations-with-percentiles" id="toc-correlations-with-percentiles" class="nav-link" data-scroll-target="#correlations-with-percentiles">Correlations with percentiles</a></li>
   </ul>
 </nav>
     </div>
@@ -1665,61 +1664,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="some-caveats-and-what-is-the-point">some caveats and what is the point</h3>
 <p>All of the above of course depends not just on the data that we got from cdc but also on our assumed model of growth which is probably pretty simplistic. Can we assume constant random variability across percentiles and in time? I think the first one is easier but I don’t think it would undermine the point a lot if variability in time changed as long as it was the same across all percentiles.</p>
 <p>A more important point that is the drive home message is that you can’t forget about the original distribution of raw values when working with percentiles. If in the simulations above we were working with a different distribution then the variability in percentiles would look different. For example for a bimodal distribution we would see the exact opposite from what happens with a normal distribution - the greater variability would be at lowest and highest percentiles.</p>
-</section>
-</section>
-<section id="correlations-with-percentiles" class="level2">
-<h2 class="anchored" data-anchor-id="correlations-with-percentiles">Correlations with percentiles</h2>
-<p>The last thing worth looking at when working with percentile scales are some unintuitive things about correlations on percentile scales.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>correlation setup</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, .<span class="dv">6</span><span class="sc">*</span>x)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>y_perc <span class="ot">&lt;-</span> <span class="fu">ntile</span>(y, <span class="dv">100</span>)</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>x_perc <span class="ot">&lt;-</span> <span class="fu">ntile</span>(x, <span class="dv">100</span>)</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, y, x_perc, y_perc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>Lets start by looking at a simple scatterplot:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>raw scatterplot</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">color =</span> col_main[<span class="dv">13</span>]) <span class="sc">+</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"correlation = "</span>,<span class="fu">as.character</span>(<span class="fu">round</span>(<span class="fu">cor</span>(x, y), <span class="dv">2</span>)))) <span class="sc">+</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Now lets look at the percentiles:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>percentile scatterplot</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x_perc, <span class="at">y =</span> y_perc)) <span class="sc">+</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">color =</span> col_main[<span class="dv">13</span>]) <span class="sc">+</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"correlation = "</span>,<span class="fu">as.character</span>(<span class="fu">round</span>(<span class="fu">cor</span>(x_perc, y_perc), <span class="dv">2</span>)))) <span class="sc">+</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>looks a loot more noisy right? But the correlation is pretty much the same. This can be pretty confusing and is actually sometimes done in those “guess the correlation from the scatterplot” games.</p>
+<p>Maybe if I have the time and some data I will try to make some longitudinal ordinal models (like a Markov model or some multilevel ordinal maybe) to expand on this (something like described by Frank Harrell <a href="https://www.fharrell.com/talk/cmstat/">here</a>).</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
