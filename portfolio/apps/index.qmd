@@ -12,4 +12,4 @@ This is a shiny app that takes data from the Polish General Office of Statistics
 
 The app can be accessed here: <https://micwypych-guswages.share.connect.posit.cloud/>
 
-{{\<video "img/app.mp4"\>}}
+{{<video "img/app.mp4">}}
