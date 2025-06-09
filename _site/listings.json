@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/percentiles/index.html",
       "/posts/first-game-2/index.html",
       "/posts/first-game/index.html"
     ]
@@ -9,6 +10,7 @@
   {
     "listing": "/portfolio.html",
     "items": [
+      "/portfolio/apps/index.html",
       "/portfolio/parks/index.html",
       "/portfolio/tidytuesday/index.html"
     ]

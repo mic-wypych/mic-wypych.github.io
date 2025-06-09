@@ -1,0 +1,9 @@
+Here are some of the shiny apps I made.
+
+## Average wages on county level in Poland
+
+This is a shiny app that takes data from the Polish General Office of Statistics. It displays average wages on county levels from 2002 to 2023.
+
+The app can be accessed here: <https://micwypych-guswages.share.connect.posit.cloud/>
+
+{{<video "img/app.mp4">}}

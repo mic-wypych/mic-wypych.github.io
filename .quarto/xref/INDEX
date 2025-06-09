@@ -40,5 +40,11 @@
   },
   "portfolio/parks/index.qmd": {
     "index.html": "54d549a3"
+  },
+  "portfolio/apps/index.qmd": {
+    "index.html": "78af90d9"
+  },
+  "posts/percentiles/index.qmd": {
+    "index.html": "f8223d3b"
   }
 }
