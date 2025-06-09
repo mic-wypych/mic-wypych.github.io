@@ -1,43 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://mic-wypych.github.io/blog.html</loc>
-    <lastmod>2025-04-30T08:36:22.353Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mic-wypych.github.io/index.html</loc>
-    <lastmod>2025-04-30T08:36:22.353Z</lastmod>
-  </url>
-  <url>
     <loc>https://mic-wypych.github.io/posts/percentiles/index.html</loc>
-    <lastmod>2025-04-30T08:36:22.397Z</lastmod>
+    <lastmod>2025-06-09T10:10:36.496Z</lastmod>
   </url>
   <url>
     <loc>https://mic-wypych.github.io/posts/first-game/index.html</loc>
-    <lastmod>2025-04-30T08:36:22.395Z</lastmod>
+    <lastmod>2025-06-09T10:10:36.493Z</lastmod>
   </url>
   <url>
-    <loc>https://mic-wypych.github.io/portfolio/parks/index.html</loc>
-    <lastmod>2025-04-30T08:36:22.359Z</lastmod>
+    <loc>https://mic-wypych.github.io/index.html</loc>
+    <lastmod>2025-06-09T10:10:36.406Z</lastmod>
   </url>
   <url>
-    <loc>https://mic-wypych.github.io/teaching.html</loc>
-    <lastmod>2025-04-30T08:36:22.398Z</lastmod>
+    <loc>https://mic-wypych.github.io/blog.html</loc>
+    <lastmod>2025-06-09T10:10:36.406Z</lastmod>
   </url>
   <url>
-    <loc>https://mic-wypych.github.io/portfolio/tidytuesday/index.html</loc>
-    <lastmod>2025-04-30T08:36:22.372Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mic-wypych.github.io/posts/first-game-2/index.html</loc>
-    <lastmod>2025-04-30T08:36:22.384Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mic-wypych.github.io/portfolio.html</loc>
-    <lastmod>2025-04-30T08:36:22.353Z</lastmod>
+    <loc>https://mic-wypych.github.io/portfolio/apps/index.html</loc>
+    <lastmod>2025-06-09T10:10:36.451Z</lastmod>
   </url>
   <url>
     <loc>https://mic-wypych.github.io/research.html</loc>
-    <lastmod>2025-04-30T08:36:22.398Z</lastmod>
+    <lastmod>2025-06-09T10:10:36.496Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mic-wypych.github.io/portfolio/tidytuesday/index.html</loc>
+    <lastmod>2025-06-09T10:10:36.470Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mic-wypych.github.io/portfolio/parks/index.html</loc>
+    <lastmod>2025-06-09T10:10:36.457Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mic-wypych.github.io/portfolio.html</loc>
+    <lastmod>2025-06-09T10:10:36.406Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mic-wypych.github.io/teaching.html</loc>
+    <lastmod>2025-06-09T10:10:36.496Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mic-wypych.github.io/posts/first-game-2/index.html</loc>
+    <lastmod>2025-06-09T10:10:36.482Z</lastmod>
   </url>
 </urlset>

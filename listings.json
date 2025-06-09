@@ -10,6 +10,7 @@
   {
     "listing": "/portfolio.html",
     "items": [
+      "/portfolio/apps/index.html",
       "/portfolio/parks/index.html",
       "/portfolio/tidytuesday/index.html"
     ]
