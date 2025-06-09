@@ -74,7 +74,7 @@
     "href": "portfolio/apps/index.html#average-wages-on-county-level-in-poland",
     "title": "Applications",
     "section": "Average wages on county level in Poland",
-    "text": "Average wages on county level in Poland\nThis is a shiny app that takes data from the Polish General Office of Statistics. It displays average wages on county levels from 2002 to 2023.\nThe app can be accessed here: https://micwypych-guswages.share.connect.posit.cloud/\n{{&lt;video “img/app.mp4”&gt;}}"
+    "text": "Average wages on county level in Poland\nThis is a shiny app that takes data from the Polish General Office of Statistics. It displays average wages on county levels from 2002 to 2023.\nThe app can be accessed here: https://micwypych-guswages.share.connect.posit.cloud/"
   },
   {
     "objectID": "research.html",
