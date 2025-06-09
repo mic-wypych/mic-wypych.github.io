@@ -25,7 +25,7 @@
     "href": "portfolio.html",
     "title": "Portfolio",
     "section": "",
-    "text": "Average wages on county level in Poland\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNational Parks in the USA\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTidytuesday\n\n\n\n\n\n\nMichał Wypych\n\n\nFeb 18, 2023\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Applications\n\n\n\n\n\n\nMichał Wypych\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNational Parks in the USA\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTidytuesday\n\n\n\n\n\n\nMichał Wypych\n\n\nFeb 18, 2023\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/first-game/index.html",
@@ -282,14 +282,14 @@
   {
     "objectID": "portfolio/apps/index.html",
     "href": "portfolio/apps/index.html",
-    "title": "Michał Wypych",
+    "title": "Applications",
     "section": "",
     "text": "Here are some of the shiny apps I made."
   },
   {
     "objectID": "portfolio/apps/index.html#average-wages-on-county-level-in-poland",
     "href": "portfolio/apps/index.html#average-wages-on-county-level-in-poland",
-    "title": "Michał Wypych",
+    "title": "Applications",
     "section": "Average wages on county level in Poland",
     "text": "Average wages on county level in Poland\nThis is a shiny app that takes data from the Polish General Office of Statistics. It displays average wages on county levels from 2002 to 2023.\nThe app can be accessed here: https://micwypych-guswages.share.connect.posit.cloud/"
   },
