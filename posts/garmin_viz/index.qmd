@@ -1,0 +1,255 @@
+---
+nt---
+title: "Recreating garmin data viz in R"
+author: "Michał Wypych"
+categories: [dataviz]
+image: "image.png"
+---
+
+I recently got my first garmin watch and I'm fascinated by the dataviz aspect of it.
+
+Making data visualizations that need to fir a circle with 40mm diameter is not something I've ever thought about before. So naturally I wanted to recreate them in #rstats.
+
+## Visualizations I want to recreate
+
+-   heart rate
+
+    ![https://www.google.com/search?client=ubuntu-sn&hs=4Ao&sca_esv=b91b52423da4ab6e&channel=fs&sxsrf=ANbL-n6QYEk_CGKPhsnR4JY5V-z0BR0pHQ:1770235894954&udm=2&fbs=ADc_l-aTuuAJ5fCRiMSMSikFOrGF6bdyujK3KN_bbLSQcwMis3qSud1NYjsG0YQq1c8NN34BQtpZzsULWB4IaZevMKKeE15vwbQrlANlsnZkX69nqH7NyjC9x5AmHz1dhm9gmBNXMW6s6jKyP4AEYcLg41EqVT9td1oCG_S3eNjYZdVuNq9xyYQ94czUC2Qt7-Ta1dVwtjamRdLgTLVjpu1rwMY44T124zDVHavueKxtiZaW4IjLjVk&q=garmin+heart+rate+plot&sa=X&ved=2ahUKEwjtxb_N0sCSAxWzJBAIHXwwJkIQtKgLegQIERAB&biw=1854&bih=1083&dpr=1&aic=0#sv=CAMSVhoyKhBlLVFfZGlQVGJIZjI5cFlNMg5RX2RpUFRiSGYyOXBZTToOaV9HbW9MVzVfRjlsdE0gBCocCgZtb3NhaWMSEGUtUV9kaVBUYkhmMjlwWU0YADABGAcgicfesQ4wAkoKCAEQAhgCIAIoAg](images/paste-7.png)
+
+<!-- -->
+
+-   sleep
+
+![https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fwww.garmin.com%2Fen-AU%2Fblog%2Fgarmin-sleep-score-and-sleep-insights%2F&ved=0CBYQjRxqFwoTCOjKxsTruJIDFQAAAAAdAAAAABBY&opi=89978449](images/paste-2.png)
+
+-   str
+
+    ![https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fwww8.garmin.com%2Fmanuals%2Fwebhelp%2FGUID-25E3235D-44D2-4384-A591-DD1D71BEBCB1%2FEN-US%2FGUID-9282196F-D969-404D-B678-F48A13D8D0CB.html&ved=0CBYQjRxqFwoTCNiO5LXsuJIDFQAAAAAdAAAAABAH&opi=89978449](images/paste-6.png)
+
+    ess
+
+![https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fwww.garmin.com.sg%2Fminisite%2Fwhy-garmin%2F&ved=0CBYQjRxqFwoTCMiF6K_ruJIDFQAAAAAdAAAAABAH&opi=89978449](images/paste-1.png)
+
+-   some bar like training readiness
+
+![https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fscandinavianoutdoor.com%2Fgarmin%2Fgear%2Fheart-rate-monitors-and-watches%2Fsports-watches%2Fforer-965-dlc-ti%2F&ved=0CBYQjRxqFwoTCMjvheDruJIDFQAAAAAdAAAAABA9&opi=89978449](images/paste-3.png){width="378"}
+
+## Setup
+
+-   packages I will use
+
+    -   The dataviz will of course be in ggplot. For some of the effects I will need `{ggforce}`, `{ggtext}` and ...
+
+-   some setup stuff like loading packages etc.
+
+```{r}
+library(ggplot2)
+library(ggforce)
+library(ggtext)
+library(dplyr)
+library(showtext)
+```
+
+## data
+
+To recreate the plots of course we will need some data. This is the easy part since the data is pretty straightforward. For heart rate and stress data I can simulate from an arima process. Sleep plot and training readiness is just some categorical data.
+
+```{r}
+
+hr <- arima.sim(n = 480, list(ar = c(0.8897, -0.4858), ma = c(.9, .6)), sd = sqrt(1), mean = 22)
+
+hr_data <- data.frame(time = 1:480,
+                      hr = hr)
+
+
+sleep_data <- data.frame(
+    day = c(),
+    awake = c(),
+    light = c(),
+    deep = c(),
+    REM = c()
+)
+
+stress <- arima.sim(n = 60, list(ar = c(.9), ma = c(.9, .6, 12)), sd = .35, mean = .3)
+
+
+
+stress_data <- data.frame(time = 1:60,
+                          stress = stress)
+
+stress_data <- stress_data |>
+    mutate(level = case_when(
+        stress <= 30 ~ "low",
+        stress <= 50 ~ "med",
+        stress <= 75 ~ "high",
+        stress > 75 ~ "very high"
+    ))
+
+training_data <- data.frame()
+
+
+```
+
+## Making the vis
+
+-   theme:
+
+    Garmin has a dark-theme, with plenty of gradient.
+
+```{r}
+font <- "Noto Sans"
+font_add_google(font)
+showtext_auto()
+theme_garmin <- function() {
+    theme_minimal() +
+    theme(plot.background = element_rect(fill = "#050505"),
+          panel.grid.minor = element_blank(),
+          panel.grid.major = element_blank(),
+          axis.text = element_text(color = "white", size = 15),
+         text = element_text(color = "grey60", family = font))
+}
+```
+
+### Heart rate plot
+
+-   making the plot
+
+```{r}
+grid_line <- data.frame(
+  x = rep(c(0, max(hr_data$time)), 2),
+  y = rep(c(100, 90), each = 2),
+  alpha_val = rep(c(0.1, 1), 2),
+  line_id = rep(1:2, each = 2)
+)
+grid_line2 <- data.frame(
+  x = rep(c(0, max(hr_data$time)), 2),
+  y = rep(c(95, 85), each = 2),
+  alpha_val = rep(c(0.1, .5), 2),
+  line_id = rep(1:2, each = 2)
+)
+
+hr_data |>
+    ggplot(aes(x = time, y = hr)) + 
+    geom_link2(data = grid_line, 
+               aes(x = x, y = y, alpha = alpha_val, group = line_id),
+               color = "white", n = 500) +
+geom_link2(data = grid_line2, 
+               aes(x = x, y = y, alpha = alpha_val, group = line_id),
+               color = "white", n = 500) +
+    scale_alpha_identity() +
+    geom_line(color = "grey50") +
+    geom_area(alpha = .4) +
+    #add annotation for max and min
+    annotate(geom = "text", x =hr_data[which.max(hr_data$hr), ]$time, y = max(hr_data$hr), label = round(max(hr_data$hr), 0), color = "grey90", size = 6, family = font) +
+    annotate(geom = "text", x =hr_data[which.min(hr_data$hr), ]$time, y = min(hr_data$hr), label = round(min(hr_data$hr), 0), color = "grey90", size = 6
+) +
+    # add heart rate box part
+    annotate(geom = "text", x =median(hr_data$time), y = max(hr_data$hr) * 1.1, label = round(mean(hr_data$hr), 0), color = "grey90", size = 20
+) +
+    annotate(geom = "text", x =median(hr_data$time), y = max(hr_data$hr) * 1.05, label = paste0("RHR ", 50), color = "grey60", size = 12
+) +
+annotate("text", x = 240, y = max(hr_data$hr) * 1.15, 
+             label = "❤", color = "red", size = 20) +
+    scale_y_continuous(breaks = c(90, 100), position = "right") +    
+coord_cartesian(ylim = c(80, 120)) +
+scale_x_continuous(expand = c(0,0)) +
+    labs(x = "Last 4 Hours", y = NULL) +
+    theme_garmin() +
+    theme(
+        axis.line.x = element_line(color = "grey60"),
+            axis.ticks.x = element_line(color = "grey60", linewidth = 1),
+        axis.text.x = element_blank(),
+        axis.title.x = element_text(size = 14, color = "grey60"),
+        axis.ticks.length.x = unit(-.25, "cm")
+    )
+```
+
+-   comparison
+
+:::{.columns}
+
+:::
+
+### Stress plot
+
+-   making the plot
+
+This plot is quite similar to the heart rate plot with the main difference being bars instead of lines.
+
+```{r}
+
+```
+
+-   comparison
+
+### Sleep plot
+
+-   making the plot
+
+This plot is quite similar to the heart rate
+
+```{r}
+
+#get alpha grid lines
+grid_line <- data.frame(
+  x = rep(c(0, max(stress_data$time)), 2),
+  y = rep(c(100, 50), each = 2),
+  alpha_val = rep(c(0.1, 1), 2),
+  line_id = rep(1:2, each = 2)
+)
+grid_line2 <- data.frame(
+  x = rep(c(0, max(stress_data$time)), 2),
+  y = rep(c(75, 25), each = 2),
+  alpha_val = rep(c(0.1, .5), 2),
+  line_id = rep(1:2, each = 2)
+)
+
+
+stress_data |>
+    ggplot() +
+    #add alpha grid lines
+    geom_link2(data = grid_line, 
+               aes(x = x, y = y, alpha = alpha_val, group = line_id),
+               color = "white", n = 500) +
+geom_link2(data = grid_line2, 
+               aes(x = x, y = y, alpha = alpha_val, group = line_id),
+               color = "white", n = 500) +
+    geom_link(aes(x = time, xend = time, y = 0, yend = stress, colour = level, alpha = after_stat(index)), n = 100, linewidth = 4) +
+    #add the box
+    annotate(geom = "text", x =median(stress_data$time), y = 115, label = 25, color = "grey90", size = 20
+) +
+    annotate(geom = "text", x =median(stress_data$time), y = 105, label = paste0("rest"), color = "grey60", size = 12
+) +
+annotate("text", x = median(stress_data$time), y = 127, 
+             label = "👤", color = "blue", size = 20) +
+    scale_color_manual(values = c("low" = "blue", "med" = "yellow", "high" = "orange", "very high" = "red")) +
+scale_y_continuous(expand = c(0,0), breaks = c(50, 100), position = "right") +
+coord_cartesian(ylim = c(0, 135)) +
+scale_alpha_continuous(range = c(0, 1)) + 
+labs(y = NULL, x = "Last 4 hours") +
+    theme_garmin() +
+    theme(legend.position = "none",
+         axis.line.x = element_line(color = "grey60"),
+            axis.ticks.x = element_line(color = "grey60", linewidth = 1),
+        axis.text.x = element_blank(),
+        axis.title.x = element_text(size = 14, color = "grey60"),
+        axis.ticks.length.x = unit(-.25, "cm"))
+```
+
+-   comparison
+
+,
+
+### Training plot
+
+-   making the plot
+
+This one is definitely the toughest one.
+
+-   comparison
+
+## Final thoughts
+
+-   what was fun?
+
+-   What was tough?
