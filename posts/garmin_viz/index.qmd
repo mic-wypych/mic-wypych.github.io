@@ -47,6 +47,7 @@ library(ggplot2)
 library(ggforce)
 library(ggtext)
 library(dplyr)
+library(tidyr)
 library(showtext)
 ```
 
@@ -63,18 +64,18 @@ hr_data <- data.frame(time = 1:480,
 
 
 sleep_data <- data.frame(
-    day = c(),
-    awake = c(),
-    light = c(),
-    deep = c(),
-    REM = c()
+    day = c(seq.Date(from = as.Date("2026-02-02"), length.out = 7, by = "day")),
+    awake = c(0, 36, 10, 0, 0, 12, 5),
+    light = c(237, 245, 210, 255, 232, 217, 220),
+    deep = c(71, 72, 63, 85, 58, 50, 75),
+    REM = c(93, 90, 83, 96, 71, 64, 78)
 )
 
-stress <- arima.sim(n = 60, list(ar = c(.9), ma = c(.9, .6, 12)), sd = .35, mean = .3)
+stress <- arima.sim(n = 68, list(ar = c(.9), ma = c(.9, .6, 12)), sd = .35, mean = .3)
 
 
 
-stress_data <- data.frame(time = 1:60,
+stress_data <- data.frame(time = 1:68,
                           stress = stress)
 
 stress_data <- stress_data |>
@@ -85,7 +86,10 @@ stress_data <- stress_data |>
         stress > 75 ~ "very high"
     ))
 
-training_data <- data.frame()
+training_data <- data.frame(
+    status = c("not ready", "no", "ok", "ready", "prime"),
+    level = c(0.25, 0.25, 0.25, 0.22, 0.03)
+)
 
 
 ```
@@ -108,6 +112,52 @@ theme_garmin <- function() {
           axis.text = element_text(color = "white", size = 15),
          text = element_text(color = "grey60", family = font))
 }
+```
+
+### Sleep plot
+
+-   making the plot
+
+This plot is quite similar to the heart rate
+
+```{r}
+# making the grid lines
+grid_line <- data.frame(
+  x = c(min(sleep_data$day), median(sleep_data$day), max(sleep_data$day)),
+  y = rep(c(10, 5), each = 3),
+  alpha_val = rep(c(0.1, 1, 0.1), 2),
+  line_id = rep(1:2, each = 3)
+)
+grid_line2 <- data.frame(
+  x = c(min(sleep_data$day), median(sleep_data$day), max(sleep_data$day)),
+  y = rep(c(7.5, 2.5), each = 3),
+  alpha_val = rep(c(0.1, 1, 0.1), 2),
+  line_id = rep(1:2, each = 3))
+# main plot
+
+sleep_data |>
+    pivot_longer(cols = c(-day), names_to = "phase", values_to = "time") |>
+    mutate(phase = factor(phase, ordered = TRUE, levels = c("awake", "REM", "light", "deep")),
+           time = time / 60) |>
+    ggplot() +
+    geom_link2(data = grid_line, 
+                   aes(x = x, y = y, alpha = alpha_val, group = line_id),
+                   color = "white", n = 500) +
+    geom_link2(data = grid_line2, 
+                   aes(x = x, y = y, alpha = alpha_val, group = line_id),
+                   color = "white", n = 500) +
+    geom_col(aes(x = day, y = time, fill = phase), width = .5) +
+    annotate(geom = "text", x = median(sleep_data$day), y = 11, label = "Sleep stages", family = font, size = 8, color = "grey60") +
+    annotate(geom = "text", x = median(sleep_data$day), y = 11.9, label = "💤", color = "blue", size = 10, color = "grey60") +
+    scale_fill_manual(values = c("awake" = "#D5538E", "REM" = "#7209b7", "light" = "#42A6C4", "deep" = "#0B20A3")) +
+    scale_x_date(date_breaks = "1 day", date_labels = "%a") +
+    scale_y_continuous(breaks = c(5, 10), expand = c(0,0), position = "right") +
+    coord_cartesian(ylim = c(0, 12.5)) +
+    labs(x = NULL, y = NULL) + 
+    theme_garmin() +
+    theme(legend.position = "none",
+         axis.line.x = element_line(color = "grey60"),
+         axis.text.x = element_text(color = "grey60", family = font))
 ```
 
 ### Heart rate plot
@@ -166,8 +216,7 @@ scale_x_continuous(expand = c(0,0)) +
 
 -   comparison
 
-:::{.columns}
-
+::: columns
 :::
 
 ### Stress plot
@@ -175,18 +224,6 @@ scale_x_continuous(expand = c(0,0)) +
 -   making the plot
 
 This plot is quite similar to the heart rate plot with the main difference being bars instead of lines.
-
-```{r}
-
-```
-
--   comparison
-
-### Sleep plot
-
--   making the plot
-
-This plot is quite similar to the heart rate
 
 ```{r}
 
@@ -214,7 +251,7 @@ stress_data |>
 geom_link2(data = grid_line2, 
                aes(x = x, y = y, alpha = alpha_val, group = line_id),
                color = "white", n = 500) +
-    geom_link(aes(x = time, xend = time, y = 0, yend = stress, colour = level, alpha = after_stat(index)), n = 100, linewidth = 4) +
+    geom_link(aes(x = time, xend = time, y = 0, yend = stress, colour = level, alpha = after_stat(index)), n = 500, linewidth = 3.5) +
     #add the box
     annotate(geom = "text", x =median(stress_data$time), y = 115, label = 25, color = "grey90", size = 20
 ) +
@@ -222,7 +259,7 @@ geom_link2(data = grid_line2,
 ) +
 annotate("text", x = median(stress_data$time), y = 127, 
              label = "👤", color = "blue", size = 20) +
-    scale_color_manual(values = c("low" = "blue", "med" = "yellow", "high" = "orange", "very high" = "red")) +
+    scale_color_manual(values = c("low" = "blue", "med" = "#F8BB59", "high" = "#fb8b24", "very high" = "#6a040f")) +
 scale_y_continuous(expand = c(0,0), breaks = c(50, 100), position = "right") +
 coord_cartesian(ylim = c(0, 135)) +
 scale_alpha_continuous(range = c(0, 1)) + 
@@ -238,13 +275,119 @@ labs(y = NULL, x = "Last 4 hours") +
 
 -   comparison
 
-,
-
 ### Training plot
 
 -   making the plot
 
-This one is definitely the toughest one.
+This one is definitely the toughest one. The gauge part is easy enough with `coord_radial()` (full credit for such solution to Cedric Scherer!) but the gradient lines with background is really stretching ggplot abilities. If we needed just to add gradients then the `{ggforce}` with `geom_link2()` would work nicely. But with the coordinates set to radial makes things difficult
+
+```{r}
+#gradient arc data
+#how can we add the gradients?
+
+
+#testing gradient data
+# Create parallel 45-degree chords inscribed in a circle
+radius <- 1
+n_lines <- 80
+
+# Create horizontal chords at different heights
+chord_data <- data.frame(
+  y = seq(-radius, radius, length.out = n_lines)
+) |>
+  filter(abs(y) < radius) |>  # Remove lines outside circle
+  mutate(
+    # Calculate x intersections with circle: x^2 + y^2 = r^2
+    x_offset = sqrt(radius^2 - y^2),
+    x_start = -x_offset,
+    x_end = x_offset,
+    # Rotate by 45 degrees
+    angle = pi/4,
+    x = x_start * cos(angle) - y * sin(angle),
+    y_new = x_start * sin(angle) + y * cos(angle),
+    xend = x_end * cos(angle) - y * sin(angle),
+    yend = x_end * sin(angle) + y * cos(angle)
+  )
+
+ggplot(chord_data) +
+  geom_segment(aes(x = x, y = y_new, xend = xend, yend = yend), 
+               color = "black") +
+  coord_fixed() +
+  theme_void()
+
+#final plot
+ggplot() +
+coord_radial(
+    start = 4/3 * pi,  # 240°
+    end = 2/3 * pi,    # 120°
+    expand = FALSE,
+    rlim = c(0, 1.2)
+  ) +
+    annotate(
+    geom = "rect", 
+    xmin = c(0, 2.5, 5, 7.5, 9.7), xmax = c(2.5, 5, 7.5, 9.7, 10),
+    ymin = c(.97, .97,.97, .93, .97), ymax = 1,
+    fill = c("#d00000", "#ff9100", "#70e000", "#72ddf7", "purple")
+  ) +
+    annotate(
+        geom = "segment", 
+        x = c(2.5, 5, 7.5, 9.7), xend = c(2.5, 5, 7.5, 9.7), 
+        y = .93, yend = 1,
+        linewidth = 1.2, color = "#101010"
+      ) +
+    annotate(
+        geom = "segment", 
+        x = 8.2, xend = 8.2,
+        y = .88, yend = 1.02,
+        size = 2, linewidth = 5, color = "#101010"
+      ) +
+    annotate(
+        geom = "segment", 
+        x = 8.2, xend = 8.2,
+        y = .9, yend = 1,
+        size = 2, linewidth = 4, color = "grey90"
+      ) +
+    annotate(
+        geom = "text",
+        x = 5,
+        y = .65,
+        label = "Training\nreadiness",
+        color = "white",
+        family = font,
+        size = 10
+    ) +
+    annotate(
+        geom = "text",
+        x = 5,
+        y = 0.1,
+        label = 82,
+        color = "white",
+        family = font,
+        size = 30
+    ) +
+    geom_text(
+        aes(x = 5,
+        y = 0,
+        label = "High"),
+        color = "#72ddf7",
+        family = font,
+        fontface = "italic",
+        nudge_y = -.4,
+        size = 10
+    ) +
+    geom_text(
+        aes(x = 5,
+        y = 0,
+        label = "Well Recovered"),
+        color = "white",
+        family = font,
+        nudge_y = -.6,
+        size = 8
+    ) +
+labs(x = NULL, y = NULL) +
+    theme_garmin() +
+    theme(axis.text = element_blank())
+```
 
 -   comparison
 
