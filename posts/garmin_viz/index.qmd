@@ -242,7 +242,7 @@ grid_line2 <- data.frame(
 )
 
 
-stress_data |>
+stress_plot <- stress_data |>
     ggplot() +
     #add alpha grid lines
     geom_link2(data = grid_line, 
@@ -270,7 +270,8 @@ labs(y = NULL, x = "Last 4 hours") +
             axis.ticks.x = element_line(color = "grey60", linewidth = 1),
         axis.text.x = element_blank(),
         axis.title.x = element_text(size = 14, color = "grey60"),
-        axis.ticks.length.x = unit(-.25, "cm"))
+        axis.ticks.length.x = unit(-.25, "cm"),
+         plot.margin = margin(200,200,200,200))
 ```
 
 -   comparison
@@ -285,44 +286,63 @@ This one is definitely the toughest one. The gauge part is easy enough with `coo
 #gradient arc data
 #how can we add the gradients?
 
+#we need some way to place the gradient background inside the plot
+#and then the last thing to figure out - cropping to a circle
 
-#testing gradient data
-# Create parallel 45-degree chords inscribed in a circle
+library(grid)
+library(ggimage)
+
 radius <- 1
-n_lines <- 80
+n_lines <- 50
 
-# Create horizontal chords at different heights
 chord_data <- data.frame(
   y = seq(-radius, radius, length.out = n_lines)
 ) |>
-  filter(abs(y) < radius) |>  # Remove lines outside circle
+  filter(abs(y) < radius) |>
   mutate(
-    # Calculate x intersections with circle: x^2 + y^2 = r^2
     x_offset = sqrt(radius^2 - y^2),
     x_start = -x_offset,
     x_end = x_offset,
-    # Rotate by 45 degrees
     angle = pi/4,
-    x = x_start * cos(angle) - y * sin(angle),
-    y_new = x_start * sin(angle) + y * cos(angle),
-    xend = x_end * cos(angle) - y * sin(angle),
-    yend = x_end * sin(angle) + y * cos(angle)
+    line_id = row_number()
+  ) |>
+  rowwise() |>
+  mutate(
+    # Vary the peak position smoothly across lines
+    peak_pos = 4 + sin((line_id / n_lines) * 2 * pi),  # Oscillates between 1 and 3
+    # Create 5 points with peak at varying position
+    x_points = list(seq(x_start, x_end, length.out = 5)),
+    y_points = list(rep(y, 5)),
+    # Generate alpha based on distance from peak_pos
+    alpha_val = list(pmax(0.1, 1 - abs(1:5 - peak_pos) / 2))
+  ) |>
+  unnest(c(x_points, y_points, alpha_val)) |>
+  mutate(
+    x = x_points * cos(angle) - y_points * sin(angle),
+    y_new = x_points * sin(angle) + y_points * cos(angle)
   )
 
-ggplot(chord_data) +
-  geom_segment(aes(x = x, y = y_new, xend = xend, yend = yend), 
-               color = "black") +
+gradient_background <- ggplot(chord_data) +
+  geom_link2(aes(x = x, y = y_new, alpha = alpha_val, group = line_id), 
+             color = "#72ddf7", n = 500) +
+  scale_alpha_identity() +
   coord_fixed() +
-  theme_void()
+  theme_void() +
+  theme(panel.background = element_rect(fill = "black"))
+
+
+temp_file <- tempfile(fileext = ".png")
+ggsave(temp_file, gradient_background, width = 4, height = 4, bg = "transparent")
 
 #final plot
-ggplot() +
+training_plot <- ggplot() +
 coord_radial(
     start = 4/3 * pi,  # 240°
     end = 2/3 * pi,    # 120°
     expand = FALSE,
     rlim = c(0, 1.2)
   ) +
+    geom_image(aes(x = 5, y = 0, image = temp_file), size = .95) +
     annotate(
     geom = "rect", 
     xmin = c(0, 2.5, 5, 7.5, 9.7), xmax = c(2.5, 5, 7.5, 9.7, 10),
@@ -333,19 +353,19 @@ coord_radial(
         geom = "segment", 
         x = c(2.5, 5, 7.5, 9.7), xend = c(2.5, 5, 7.5, 9.7), 
         y = .93, yend = 1,
-        linewidth = 1.2, color = "#101010"
+        linewidth = 1, color = "#101010"
       ) +
     annotate(
         geom = "segment", 
         x = 8.2, xend = 8.2,
         y = .88, yend = 1.02,
-        size = 2, linewidth = 5, color = "#101010"
+        size = 2, linewidth = 2, color = "#101010"
       ) +
     annotate(
         geom = "segment", 
         x = 8.2, xend = 8.2,
         y = .9, yend = 1,
-        size = 2, linewidth = 4, color = "grey90"
+        size = 2, linewidth = 1, color = "grey90"
       ) +
     annotate(
         geom = "text",
@@ -353,8 +373,10 @@ coord_radial(
         y = .65,
         label = "Training\nreadiness",
         color = "white",
+        fontface = "bold",
         family = font,
-        size = 10
+        lineheight = .3,
+        size = 8
     ) +
     annotate(
         geom = "text",
@@ -386,7 +408,36 @@ coord_radial(
     ) +
 labs(x = NULL, y = NULL) +
     theme_garmin() +
-    theme(axis.text = element_blank())
+    theme(axis.text = element_blank(),
+         plot.margin = margin(b = 50))
+```
+
+```{r}
+#saving as circle
+library(magick)
+
+crop_to_circle <- function(original_plot, width, height) {
+    
+    ggsave(temp_file, original_plot, width = width, height = height, bg = "black")
+    
+    img <- image_read(temp_file) |>
+      image_scale("500x500") |>
+      image_background("none") |>
+      image_border("none", "0x0") |>
+      image_trim()
+    
+    # Create circular mask
+    mask <- image_draw(image_blank(500, 500))
+    symbols(219, 220, circles = 150, bg = 'black', inches = FALSE, add = TRUE)
+    dev.off()
+    
+    img_circle <- image_composite(img, mask, operator = "DstIn")
+    return(img_circle)
+}
+
+# ok this works for training plot!
+training_plot_final <- crop_to_circle(training_plot, 2, 2)
+training_plot_final
 ```
 
 -   comparison
