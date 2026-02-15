@@ -131,7 +131,7 @@ For typography, we’ll use Noto Sans as the base font and incorporate icons fro
 ```{r}
 font <- "Noto Sans"
 font_add_google(font)
-font_add('fa-solid', './Font Awesome 7 Free-Solid-900.otf')
+font_add('fa-solid', '.assets/fonts/Font Awesome 7 Free-Solid-900.otf')
 # my guess is we need to adjust both the size of the original p
 showtext_auto()
 theme_garmin <- function() {
