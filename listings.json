@@ -10,8 +10,8 @@
   {
     "listing": "/blog.html",
     "items": [
-      "/posts/percentiles/index.html",
       "/posts/garmin_viz/index.html",
+      "/posts/percentiles/index.html",
       "/posts/first-game-2/index.html",
       "/posts/first-game/index.html"
     ]
