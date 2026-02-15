@@ -1,5 +1,6 @@
 ---
 title: "A few remarks on percentile scales"
+date: "2025-06-15"
 author: "Michał Wypych"
 categories: [statistics, simulation]
 image: "image.png"

@@ -1,13 +1,13 @@
 ---
 title: "Recreating garmin data viz in R"
-date: "'r Sys.Date()'"
+date: "2026-02-15"
 author: "Michał Wypych"
 format:
   html:
     code-fold: true
     code-summary: "Show the code"
 categories: [dataviz]
-image: "image.png"
+image: "training_readiness.png"
 ---
 
 I recently got my first garmin watch and I'm fascinated by the dataviz aspect of it. If you haven't heard about it, Garmin is a brand of sports watches that allows you to track a bunch of stuff during activities and daily life like heart rate, stress, sleep etc. That means they need to display a lot of information in a very small space. They need to be very intuitive and easy to understand. Designing clear, intuitive visualizations within a circular space that has 40mm diameter isn’t trivial. It’s a constraint I’d never seriously considered before. And naturally, that made me want to recreate some of those charts in R.
@@ -131,7 +131,7 @@ For typography, we’ll use Noto Sans as the base font and incorporate icons fro
 ```{r}
 font <- "Noto Sans"
 font_add_google(font)
-font_add('fa-solid', '.assets/fonts/Font Awesome 7 Free-Solid-900.otf')
+font_add('fa-solid', './assets/fonts/Font Awesome 7 Free-Solid-900.otf')
 # my guess is we need to adjust both the size of the original p
 showtext_auto()
 theme_garmin <- function() {
