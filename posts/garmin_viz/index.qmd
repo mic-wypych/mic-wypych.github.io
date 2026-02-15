@@ -10,48 +10,45 @@ categories: [dataviz]
 image: "image.png"
 ---
 
-I recently got my first garmin watch and I'm fascinated by the dataviz aspect of it.
+I recently got my first garmin watch and I'm fascinated by the dataviz aspect of it. If you haven't heard about it, Garmin is a brand of sports watches that allows you to track a bunch of stuff during activities and daily life like heart rate, stress, sleep etc. That means they need to display a lot of information in a very small space. They need to be very intuitive and easy to understand. Designing clear, intuitive visualizations within a circular space that has 40mm diameter isn’t trivial. It’s a constraint I’d never seriously considered before. And naturally, that made me want to recreate some of those charts in R.
 
-- what is garmin
-- what are the visualizations about
+Will I use them for anything practical? No. Is it fun? Absolutely.
 
-Making data visualizations that need to fit a circle with 40mm diameter is not something I've ever thought about before. So naturally I wanted to recreate them in #rstats. Here are some examples of charts in garmin watches that I wnt to recreate.
+And I find recreating other data visualizations to be a great way to learn new techniques and improve my skills. Especially ones that were created in a different technology. I only have the end point and I need to figure out how to do it in R. That means my thinking is not naturally constrained by what is intuitive in R/ggplot world. Here are a few pictures of the Garmin charts I decided to rebuild (These recreations are purely a technical exercise, I’m not attempting to replicate or reuse Garmin’s design system beyond this exploration.):
 
-Will I use it for anything? No. Is it fun? Hell yes! And I find recreating other data visualizations to be a great way to learn new techniques and improve your skills. Especially ones that were created in a different technology. I only have the end point and I need to figure out how to do it in R. That means my thinking is not naturally constrained by what is intuitive in R/ggplot world.
-
-
-:::: {.columns}
-::: {.column}
-heart rate
-
-![https://www.google.com/search?client=ubuntu-sn&hs=4Ao&sca_esv=b91b52423da4ab6e&channel=fs&sxsrf=ANbL-n6QYEk_CGKPhsnR4JY5V-z0BR0pHQ:1770235894954&udm=2&fbs=ADc_l-aTuuAJ5fCRiMSMSikFOrGF6bdyujK3KN_bbLSQcwMis3qSud1NYjsG0YQq1c8NN34BQtpZzsULWB4IaZevMKKeE15vwbQrlANlsnZkX69nqH7NyjC9x5AmHz1dhm9gmBNXMW6s6jKyP4AEYcLg41EqVT9td1oCG_S3eNjYZdVuNq9xyYQ94czUC2Qt7-Ta1dVwtjamRdLgTLVjpu1rwMY44T124zDVHavueKxtiZaW4IjLjVk&q=garmin+heart+rate+plot&sa=X&ved=2ahUKEwjtxb_N0sCSAxWzJBAIHXwwJkIQtKgLegQIERAB&biw=1854&bih=1083&dpr=1&aic=0#sv=CAMSVhoyKhBlLVFfZGlQVGJIZjI5cFlNMg5RX2RpUFRiSGYyOXBZTToOaV9HbW9MVzVfRjlsdE0gBCocCgZtb3NhaWMSEGUtUV9kaVBUYkhmMjlwWU0YADABGAcgicfesQ4wAkoKCAEQAhgCIAIoAg](images/paste-7.png)
-
+::::: columns
+::: column
 sleep
 
-![https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fwww.garmin.com%2Fen-AU%2Fblog%2Fgarmin-sleep-score-and-sleep-insights%2F&ved=0CBYQjRxqFwoTCOjKxsTruJIDFQAAAAAdAAAAABBY&opi=89978449](images/paste-2.png)
+![sleep plot](images/_PjJq3q2.jpeg){fig-alt="a stacked bar plot showing length of various stages of sleep over 1 week"}
 
+heart rate
+
+![Heart rate plot](images/HckQwEbZ.jpeg){fig-alt="A line plot showing changes in heart rate over 4 hours"}
 :::
-::: {.column}
+
+::: column
 stress
 
-![https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fwww.garmin.com.sg%2Fminisite%2Fwhy-garmin%2F&ved=0CBYQjRxqFwoTCMiF6K_ruJIDFQAAAAAdAAAAABAH&opi=89978449](images/paste-1.png)
+![Stress plot](images/sUgf_wZw.jpeg){fig-alt="A colored bar plot displaying levels of stress over 4 hours"}
 
-some bar like training readiness
+training readiness
 
-![https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fscandinavianoutdoor.com%2Fgarmin%2Fgear%2Fheart-rate-monitors-and-watches%2Fsports-watches%2Fforer-965-dlc-ti%2F&ved=0CBYQjRxqFwoTCMjvheDruJIDFQAAAAAdAAAAABA9&opi=89978449](images/paste-3.png){width="378"}
+![Training readiness plot](images/47YHlrOk.jpeg){fig-alt="A gauge plot showing garmin's training readiness"}
 :::
+
 <!-- end columns -->
-::::
+:::::
 
-There are a few things that I think are pretty distinctive of garmin dataviz.
+There are a few characteristics that feel distinctive in Garmin’s visual style:
 
--   vivid, lively colors in a dark theme
+-   Vivid, high-contrast colors on a dark background
 
--   Plenty of gradient/changes in transparency
+-   Gradients and transparency to create depth
 
--   using key highlights
+-   Strong visual emphasis on key metrics
 
-All of those help to remove things that could distract users from the key elements and allow for more intuitive grasp. It's actually quite natural if you design charts that are supposed to be displayed on a 40mm screen that users will just glance at while walking/running. You can't get into any detailed stroytelling here!
+All of those help to remove things that could distract users from the key elements. It's actually quite natural if you design charts that are supposed to be displayed on a 40mm screen that users will just glance at while walking/running. You can't get into any detailed stroytelling here!
 
 ## Setup
 
@@ -59,7 +56,7 @@ All of those help to remove things that could distract users from the key elemen
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
 
-In order to recreate the garmin data viz we'll need a few sets of package. Firstly, of course some data wrangling and basic `{ggplot2}`. We'll need `{ggforce}` to better work with gradients and transparency in the plots. We'll also need some packages to deal with texts: `{showtext}` for basic font, `{fontawesome}` for icons and `{ggtext}` to work with those icons inside ggplot. Finally we'll need `{magick}` to crop the plots to circular shape and `{ggimage}` to place the gradient background in the trainind readiness plot.
+In order to recreate the garmin data viz we'll need a few sets of package. Firstly, of course some data wrangling and basic `{ggplot2}`. We'll need `{ggforce}` to better work with gradients and transparency in the plots. We'll also need some packages to deal with texts: `{showtext}` for basic fonts, `{fontawesome}` and `{ggtext}` to work with icons inside ggplot. Finally we'll need `{magick}` to crop the plots to circular shape and `{ggimage}` to place the gradient background in the training readiness plot.
 
 ```{r warning=FALSE, message=FALSE}
 library(dplyr)
@@ -74,7 +71,13 @@ library(magick)
 
 ## data
 
-To recreate the plots of course we will need some data. This is the easy part since the data is pretty straightforward. For heart rate and stress data I can simulate from an arima process. Sleep plot and training readiness is just some categorical data. Heart rate and stress plots displays changes over time on a granular level while the sleep plot shows them on daily intervals. The training readiness plot just shows training readiness in a given moment.
+To recreate the plots, we’ll first need some data.
+
+The heart rate and stress visualizations show continuous changes over time at a fairly granular level. For those, I’ll simulate time series data using a simple ARIMA process. The exact values aren’t important, what matters is generating realistic-looking variation.
+
+The sleep plot aggregates metrics at daily intervals, while the training readiness visualization represents a single score at a given moment. For these, simple categorical or summarized data structures are sufficient.
+
+Since the focus of this post is on visual construction rather than modeling, simulated data works perfectly well here.
 
 ```{r}
 set.seed(2137)
@@ -119,7 +122,11 @@ training_data <- data.frame(
 
 ## Making the vis
 
-We'll start making the visualizations by defining some common theme to use in all plots. Garmin plots use a dark-theme with gray, large text. We'll use Noto Sans as our base font and use icons from fontawesome. In order to recreate the plots you need to download the otf files from their website.
+We’ll start by defining a shared theme that will be used across all plots.
+
+As discussed earlier, Garmin’s visual style relies on a dark background with high-contrast, oversized typography. To approximate that look, we’ll create a custom ggplot2 theme with muted gray text on a near-black background.
+
+For typography, we’ll use Noto Sans as the base font and incorporate icons from Font Awesome. We can get Noto Sans from google but Font Awesome needs to be downloaded from their website as an .otf file. We'll use this theme in every plot and only tweak some additional elements if necessary.
 
 ```{r}
 font <- "Noto Sans"
@@ -133,13 +140,27 @@ theme_garmin <- function() {
           panel.grid.minor = element_blank(),
           panel.grid.major = element_blank(),
           axis.text = element_text(color = "white", size = 15),
-         text = element_text(color = "grey60", family = font))
+         text = element_text(color = "grey90", family = font))
 }
 ```
 
 ### Cropping to circle
 
-Before me make the visualizations lets work out how to crop the plot to a circle. The main idea here is to save the plot to a temporary file, fix its size with some extra space around it. Then we draw a circle around the plot and crop it to that circle. The function allows us to control the width and height of the cropped plot which will come in handy when cropping different plots. We also need to control the scale of the image (mainly because the training readiness plot looks different and needs different scale) and where to place the circle mask as well as its size. Tweaking the parameters took quite a few iterations but once they are set it should be straightforward to crop our plots. Ultimately the size argument in circle_position is crucial for setting the size of the final plot and we want to keep it constant across the plots.
+Before generating the individual visualizations, we need a way to crop each plot into a circular shape.
+
+The approach is straightforward:
+
+1.  Save the plot to a temporary file with additional padding.
+
+2.  Draw a circular mask over the image.
+
+3.  Crop the image to that mask.
+
+The helper function has several parameters: the width and height image to crop, the scale (size of the final image), and the position and radius of the circular mask. These controls are necessary because not all plots behave the same way — the training readiness visualization, in particular, requires slightly different scaling.
+
+Finding the right parameter values took a few iterations. Once calibrated, however, the function makes circular cropping consistent and reproducible across plots.
+
+One parameter is especially important: the size argument inside circle_position. This determines the final visible diameter of the plot, and keeping it constant ensures visual consistency across all visualizations.
 
 ```{r}
 crop_to_circle <- function(original_plot, width, scale, height, border, circle_position) {
@@ -162,41 +183,59 @@ crop_to_circle <- function(original_plot, width, scale, height, border, circle_p
 }
 ```
 
-We can see how this works on a simple example:
+We can see how this works on a simple example. Here's an uncropped plot:
 
 ```{r}
+#| fig-width: 15
+#| fig-height: 15
 
 
+example_df <- data.frame(x = sample(letters, 5),
+          y = c(1, 2, 3, 4, 5))
+
+example_plot <- example_df |>
+    ggplot(aes(x = x, y = y, fill = y)) +
+    geom_col() +
+    annotate(geom = "text", x = median(example_df$x), y = 6, label = "Some text", size = 50, color = "white") +
+    scale_x_discrete(expand = c(0,0)) +
+    scale_y_continuous(expand = c(0,0)) +
+    coord_cartesian(ylim = c(0, 8)) +
+    labs(x = NULL, y = NULL)  +
+    theme_garmin() +
+    theme(legend.position = "none",
+          plot.margin = margin(t = 50,200,200,200))
+
+example_plot
 ```
 
-One thing that bit me with that approach was setting the right margins in the plots before cropping. Essentially we need to add enough space around the plot so that the cropped plot doesn't cut off any of the elements. This was especially tricky with the training readiness plot as it looked different from other plots.
+And here's a cropped one:
 
+```{r}
+cropped_example_plot <- crop_to_circle(example_plot, 15,15, border = 10, scale = 500, c("left" = 240, "top" = 250, "size" = 220))
+cropped_example_plot
+```
+
+One thing that required a lot of tweaking from me with that approach was setting the right margins in the plots before cropping. Essentially we need to add enough space around the plot so that the cropped plot doesn't cut off any of the elements. This was especially tricky with the training readiness plot as it looked different from other plots.
 
 ### Sleep plot
 
-Lets start with the sleep stages plot. The plot has pretty much 3 elements we need to build:
+Let’s start with the sleep stages visualization. It consists of three main components:
 
--   the grid lines that fade at the sides (some grid lines are brighter than others)
+-   Grid lines that fade toward the edges (with some lines more prominent than others)
 
--   the text and icon at the top
+-   A header containing text and an icon
 
--   the bars showing the data for each day of the week.
+-   Bars representing sleep stages across the week
 
-Lets start with the simplest part: bars. It's pretty much a standard bar chart with custom colors.
+Most of the other plots have a similar structure (except the training readiness which has a gauge) so once we get the general patter it will be easier to make the other plots.
 
-```{r}
+We'll start with the gradient grid lines. `{ggplot2}` does not support gradient strokes for panel grid lines out of the box, so we need to draw them manually.
 
-```
+This is where `{ggforce}` becomes particularly useful. Its `geom_link2()` allows us to vary aesthetics — including alpha — along the length of a line. By mapping transparency across the x-direction, we can create the fading effect that mimics Garmin’s design. it's been the best function for me to work with gradients and lines in `{ggplot}`.
 
-
-`{ggplot}` doesn't allow us to use gradient on the grid lines so we need to make them manually. This is when `{ggforce}` comes to the rescue with its amazing `geom_link2()`. Honestly it's been the best function for me to work with gradients and lines in `{ggplot}`.
-
-
-
-Finally we need to add the icon and the text about sleep stages. We can use `geom_richtext()` from `{ggtext}` to add the icon. The icon itself is just a unicode character from fontawesome package. Text can be added with `annotate()`.
+We can also do some basic wrangling here (pivoting to long format and making phase variable a factor) and define some basic properties of the plot like the formatting of x and y scale and the limits on y axis.
 
 ```{r}
-# making the grid lines
 grid_line <- data.frame(
   x = c(min(sleep_data$day), median(sleep_data$day), max(sleep_data$day)),
   y = rep(c(10, 5), each = 3),
@@ -208,7 +247,7 @@ grid_line2 <- data.frame(
   y = rep(c(7.5, 2.5), each = 3),
   alpha_val = rep(c(0.1, 1, 0.1), 2),
   line_id = rep(1:2, each = 3))
-# main plot
+
 
 sleep_plot <- sleep_data |>
     pivot_longer(cols = c(-day), names_to = "phase", values_to = "time") |>
@@ -216,35 +255,72 @@ sleep_plot <- sleep_data |>
            time = time / 60) |>
     ggplot() +
     geom_link2(data = grid_line, 
-                   aes(x = x, y = y, alpha = alpha_val, group = line_id),
-                   color = "white", n = 500) +
+               aes(x = x, y = y, alpha = alpha_val, group = line_id),
+               color = "white", n = 500) +
     geom_link2(data = grid_line2, 
-                   aes(x = x, y = y, alpha = alpha_val, group = line_id),
-                   color = "white", n = 500) +
+               aes(x = x, y = y, alpha = alpha_val, group = line_id),
+               color = "white", n = 500)
+```
+
+This approach gives us full control over which lines are emphasized and how quickly they fade toward the edges.
+
+Now we'll add the bars. IT's the basic stacked bar chart with an added manual color palette.
+
+```{r}
+
+
+sleep_plot <- sleep_plot +
+    geom_link2(data = grid_line, 
+               aes(x = x, y = y, alpha = alpha_val, group = line_id),
+               color = "white", n = 500) +
+geom_link2(data = grid_line2, 
+               aes(x = x, y = y, alpha = alpha_val, group = line_id),
+               color = "white", n = 500)
+
+
+
+sleep_plot <- sleep_plot +
     geom_col(aes(x = day, y = time, fill = phase), width = .5) +
-    annotate(geom = "text", x = median(sleep_data$day), y = 11, label = "Sleep stages", family = font, size = 50, color = "grey60") +
-    geom_richtext(aes(x = median(sleep_data$day), y = 12.3, label = "<span style='font-family:fa-solid'>&#xf186;</span>"), text.color = "blue", size = 75, fill = NA) +
-    scale_fill_manual(values = c("awake" = "#D5538E", "REM" = "#7209b7", "light" = "#42A6C4", "deep" = "#0B20A3")) +
+    scale_fill_manual(values = c("awake" = "#D5538E", "REM" = "#7209b7", "light" = "#42A6C4", "deep" = "#0B20A3"))
+```
+
+Nothing unusual happens here — the main work is in styling and color selection.
+
+Finally we need to add the icon and the text about sleep stages. We can use `geom_richtext()` from `{ggtext}` to add the icon. The icon itself is just a unicode character from fontawesome package. Text can be added with `annotate()`.
+
+```{r}
+sleep_plot <- sleep_plot +
+    annotate(geom = "text", x = median(sleep_data$day), y = 11, label = "Sleep stages", family = font, size = 50, color = "grey90") +
+    geom_richtext(aes(x = median(sleep_data$day), y = 12.3, label = "<span style='font-family:fa-solid'>&#xf186;</span>"), text.color = "#072ac8", size = 75, fill = NA)  +
     scale_x_date(date_breaks = "1 day", labels = function(x) substr(format(x, "%a"), 1, 1)) +
     scale_y_continuous(breaks = c(5, 10), expand = c(0,0), position = "right") +
     coord_cartesian(ylim = c(0, 13.5)) +
-    labs(x = NULL, y = NULL) + 
+    labs(x = NULL, y = NULL) 
+```
+
+At this point, we have all structural components in place. The remaining steps involve applying the shared theme and W
+
+```{r}
+sleep_plot <- sleep_plot + 
     theme_garmin() +
     theme(legend.position = "none",
-        axis.line.x = element_line(color = "grey60"),
-            axis.ticks.x = element_line(color = "grey60", linewidth = 1),
-        axis.text = element_text(color = "grey60", size = 120),
-        axis.title.x = element_text(size = 100, color = "grey60"),
+        axis.line.x = element_line(color = "grey90"),
+            axis.ticks.x = element_line(color = "grey90", linewidth = 1),
+        axis.text = element_text(color = "grey90", size = 140, fontface = "bold"),
+        axis.title.x = element_text(size = 100, color = "grey90"),
         axis.ticks.length.x = unit(-.25, "cm"),
          plot.margin = margin(t = 50,200,200,200))
 
 cropped_sleep_plot <- crop_to_circle(sleep_plot, 12.5, 12.5, border = 10, scale = 500, c("left" = 240, "top" = 220, "size" = 220))
 cropped_sleep_plot
+
 ```
 
 ### Heart rate plot
 
-This plot shows changes in heart rate over time (a couple of hours).
+This visualization shows changes in heart rate over a few hours. Structurally, it follows the same overall pattern as the sleep plot: a dark background, custom grid lines, header with icon and text, and circular cropping.
+
+The main difference is that instead of bars we have a line chart with a shaded area and we have annotations at the highest and lowest values that allow a quicker grasp of the range of the heart rate. The header part is also a bit more developed - the current heart rate is displayed in a large font below the icon.
 
 ```{r}
 
@@ -272,16 +348,16 @@ geom_link2(data = grid_line2,
                aes(x = x, y = y, alpha = alpha_val, group = line_id),
                color = "white", n = 500) +
     scale_alpha_identity() +
-    geom_line(color = "grey80") +
+    geom_line(color = "grey90") +
     geom_area(alpha = .4, fill = "grey30") +
     #add annotation for max and min
-    annotate(geom = "text", x =hr_data[which.max(hr_data$hr), ]$time, y = max(hr_data$hr), label = round(max(hr_data$hr), 0), color = "grey90", size = 30, family = font) +
-    annotate(geom = "text", x =hr_data[which.min(hr_data$hr), ]$time, y = min(hr_data$hr), label = round(min(hr_data$hr), 0), color = "grey90", size = 30
+    annotate(geom = "text", x =hr_data[which.max(hr_data$hr), ]$time, y = max(hr_data$hr), label = round(max(hr_data$hr), 0), color = "grey90", size = 40, family = font) +
+    annotate(geom = "text", x =hr_data[which.min(hr_data$hr), ]$time, y = min(hr_data$hr), label = round(min(hr_data$hr), 0), color = "grey90", size = 40
 ) +
     # add heart rate box part
     annotate(geom = "text", x =median(hr_data$time), y = 110, label = round(mean(hr_data$hr), 0), color = "grey90", size = 80
 ) +
-    annotate(geom = "text", x =median(hr_data$time), y = 105, label = paste0("RHR ", 50), color = "grey60", size = 50
+    annotate(geom = "text", x =median(hr_data$time), y = 105, label = paste0("RHR ", 50), color = "grey90", size = 50
 ) +
 geom_richtext(aes(x = 240, y = 118, label = "<span style='font-family:fa-solid'>&#xf004;</span>"), text.color = "red", size = 90, fill = NA) +
 scale_x_continuous(expand = c(0,0)) +
@@ -291,24 +367,25 @@ scale_x_continuous(expand = c(0,0)) +
     labs(x = "Last 4 Hours", y = NULL) +
     theme_garmin() +
     theme(
-        axis.line.x = element_line(color = "grey60"),
-            axis.ticks.x = element_line(color = "grey60", linewidth = 1),
-        axis.text.y = element_text(color = "grey60", size = 120),
+        axis.line.x = element_line(color = "grey90"),
+            axis.ticks.x = element_line(color = "grey90", linewidth = 1),
+        axis.text.y = element_text(color = "grey90", size = 140, fontface = "bold"),
         axis.text.x = element_blank(),
-        axis.title.x = element_text(size = 100, color = "grey60"),
+        axis.title.x = element_text(size = 100, color = "grey90", fontface = "bold"),
         axis.ticks.length.x = unit(-.25, "cm"),
          plot.margin = margin(t = 100,200,200,200)
     )
 
 cropped_heart_plot <- crop_to_circle(heart_plot, 15, 15, border = 10,scale = 500, c("left" = 240, "top" = 220, "size" = 220))
-cropped_heart_plot
+cropped_heart_plot 
+
 ```
 
 ### Stress plot
 
--   making the plot
+The stress visualization closely mirrors the structure of the heart rate plot: the same gradient grid lines, the same header treatment with icon and title, and the same circular framing.
 
-This plot is quite similar to the heart rate plot with the main difference being bars instead of lines.
+The only difference is the use of bars instead of a line. Each bar represents stress level at a given time point and is color-coded according to intensity. The bars fade into black toward the bottom. This keeps the chart from looking too dense and makes the higher values stand out more clearly.
 
 ```{r}
 
@@ -340,9 +417,9 @@ geom_link2(data = grid_line2,
     #add the box
     annotate(geom = "text", x =median(stress_data$time), y = 117, label = 25, color = "grey90", size = 80
 ) +
-    annotate(geom = "text", x =median(stress_data$time), y = 105, label = paste0("rest"), color = "grey60", size = 50
+    annotate(geom = "text", x =median(stress_data$time), y = 105, label = paste0("rest"), color = "grey90", size = 60
 ) +
-geom_richtext(aes(x = median(stress_data$time), y = 135, label = "<span style='font-family:fa-solid'>&#xf007;</span>"), text.color = "blue", size = 90, fill = NA) +
+geom_richtext(aes(x = median(stress_data$time), y = 135, label = "<span style='font-family:fa-solid'>&#xf007;</span>"), text.color = "#072ac8", size = 90, fill = NA) +
     scale_color_manual(values = c("low" = "blue", "med" = "#F8BB59", "high" = "#fb8b24", "very high" = "#bb3e03")) +
 scale_x_continuous(expand = c(0,0)) +
 scale_y_continuous(expand = c(0,0), breaks = c(50, 100), position = "right") +
@@ -351,11 +428,11 @@ scale_alpha_continuous(range = c(0, 1)) +
 labs(y = NULL, x = "Last 4 hours") +
     theme_garmin() +
     theme(legend.position = "none",
-         axis.line.x = element_line(color = "grey60"),
-         axis.ticks.x = element_line(color = "grey60", linewidth = 1),
+         axis.line.x = element_line(color = "grey90"),
+         axis.ticks.x = element_line(color = "grey90", linewidth = 1),
         axis.text.x = element_blank(),
-        axis.text.y = element_text(color = "grey60", size = 120),
-        axis.title.x = element_text(size = 100, color = "grey60"),
+        axis.text.y = element_text(color = "grey90", size = 140, fontface = "bold"),
+        axis.title.x = element_text(size = 100, color = "grey90", fontface = "bold"),
         axis.ticks.length.x = unit(-.25, "cm"),
          plot.margin = margin(t = 50,200,200,200))
 
@@ -363,14 +440,21 @@ cropped_stress_plot <- crop_to_circle(stress_plot, 15, 15, border = 10,scale = 5
 cropped_stress_plot
 ```
 
--   comparison
-
 ### Training plot
 
-This one is definitely the toughest one. The gauge part is easy enough with `coord_radial()` (full credit for such solution to Cedric Scherer!) but the gradient lines with background is really stretching ggplot abilities. If we needed just to add gradients then the `{ggforce}` with `geom_link2()` would work nicely. But with the coordinates set to radial makes things difficult. Additionally the lines with gradient are all arcs of a cricle and they have different patterns to changing their transparency.\
-I'm not gonna lie, part of the
+This one was definitely the toughest.
 
-Here's how it ultimately looks like:
+The gauge itself is relatively straightforward thanks to coord_radial(), full credit for that approach goes to Cedric Scherer. Once the radial coordinate system is in place, building the basic semicircular gauge is manageable.
+
+The real challenge is the background: a set of gradient arcs that follow the curvature of the circle. If we were working in Cartesian coordinates, {ggforce} with geom_link2() would handle gradient lines nicely. But once everything is transformed into radial coordinates, things get more complicated.
+
+All of the background elements are arcs of a circle, and each one varies in transparency along its length. Generating those shapes so that they align correctly within the radial system required a bit of experimentation.
+
+I’ll be honest — part of the code that generates the curved gradient lines started as AI-generated scaffolding. I then adjusted the parameters and transparency mappings to achieve the variation seen in the final result.
+
+This code generates a set of parallel chord-like arcs that sit inside a circle of a given radius. It first creates evenly spaced horizontal lines (y) within the circle and calculates where each line intersects the circle boundary (x_start, x_end) using the circle equation $x^2+y^2=r^2$. For each line, it generates a small sequence of points between those intersections and assigns varying alpha values so transparency peaks at a specific position along the line.
+
+Finally, the points are rotated by a fixed angle using a standard 2D rotation matrix, transforming the horizontal segments into angled arcs that align with the radial layout. The resulting dataset contains coordinates and alpha values that can be used (e.g., with geom_link2()) to draw gradient lines that follow the curvature of the circular gauge.
 
 ```{r}
 
@@ -417,21 +501,17 @@ ggsave(temp_file, gradient_background, width = 4, height = 4, bg = "transparent"
 
 ```
 
-And here's the plot with the gradient background:
+Making the actual plot is ultimately a lot of `annotate()` calls to place each element: the gauge, the mark of current readiness on the gauge and each text label. Some labels near the bottom of the chart required more precise control, so I switched to geom_text() instead of annotate(). That gave me better handling of positioning adjustments and prevented overlap after the radial transformation.
+
+At this stage, it’s less about new geoms and more about fine-tuning placement until everything feels balanced within the circular frame. Especially the size of the labels required some trial and error.
 
 ```{r}
-#gradient arc data
-#how can we add the gradients?
-
-#we need some way to place the gradient background inside the plot
-#and then the last thing to figure out - cropping to a circle
-
 
 #final plot
 training_plot <- ggplot() +
 coord_radial(
-    start = 4/3 * pi,  # 240°
-    end = 2/3 * pi,    # 120°
+    start = 4/3 * pi,
+    end = 2/3 * pi,
     expand = FALSE,
     rlim = c(0, .9)
   ) +
@@ -468,7 +548,7 @@ coord_radial(
         color = "white",
         family = font,
         lineheight = .3,
-        size = 70
+        size = 75
     ) +
     annotate(
         geom = "text",
@@ -477,7 +557,7 @@ coord_radial(
         label = 82,
         color = "white",
         family = font,
-        size = 220
+        size = 260
     ) +
     geom_text(
         aes(x = 5,
@@ -487,7 +567,7 @@ coord_radial(
         family = font,
         fontface = "italic",
         nudge_y = -.4,
-        size = 70
+        size = 75
     ) +
     geom_text(
         aes(x = 5,
@@ -496,7 +576,7 @@ coord_radial(
         color = "white",
         family = font,
         nudge_y = -.6,
-        size = 70
+        size = 75
     ) +
 labs(x = NULL, y = NULL) +
     theme_garmin() +
@@ -510,23 +590,25 @@ cropped_training_plot
 
 Here's how all the plots look together:
 
-:::: {.columns}
-
+::::: columns
 ::: {.column width="50%"}
 ```{r echo = FALSE}
 cropped_sleep_plot
-cropped_training_plot
+cropped_heart_plot
 ```
 :::
 
 ::: {.column width="50%"}
 ```{r echo = FALSE}
-cropped_heart_plot
+
 cropped_stress_plot
+cropped_training_plot
 ```
 :::
-::::
+:::::
 
 ## Final thoughts
 
-It was a lot more fun that I initially thought. The workload was pretty much 10% on making the basic versions of the plot and 90% on figuring out how to make the gradient background and crop the plots to circle. Especially the last part was tough as I needed to fit the sizes of the plots well.
+It was a lot more fun that I initially thought. The workload was pretty much 10% on making the basic versions of the plot and 90% on figuring out how to make the gradient background and crop the plots to circle. Especially the last part was tough as I needed to fit the sizes of the plots well and the training readiness plot was different from the others. I feel it also taught me a lot more about how to work with transparency in ggplot. The only thing I couldn't work out was gradient on the icons. It would have made the plots even better.
+
+I highly recommend trying something like this yourself. Recreating visualizations built in a different technology is a great way to discover new techniques and stretch your mental model of the tools you already use. And it’s genuinely fun.
