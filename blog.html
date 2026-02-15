@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.31">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -34,14 +34,15 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-5419ed3fafcd2fdb822a7ad489787a21.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-aa0bfeffdde32bb1c7607de7a91446fc.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ba8493757ce649569c6973c01f315877.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-f0d9942ab9dac2996ec10111b668d452.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -113,7 +114,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -208,7 +209,7 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(3)</span></div><div class="category" data-category="YXBwcw==">apps <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2FtZXM=">games <span class="quarto-category-count">(2)</span></div><div class="category" data-category="c2ltdWxhdGlvbg==">simulation <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c3RhdGlzdGljcw==">statistics <span class="quarto-category-count">(1)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(4)</span></div><div class="category" data-category="YXBwcw==">apps <span class="quarto-category-count">(2)</span></div><div class="category" data-category="ZGF0YXZpeg==">dataviz <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2FtZXM=">games <span class="quarto-category-count">(2)</span></div><div class="category" data-category="c2ltdWxhdGlvbg==">simulation <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c3RhdGlzdGljcw==">statistics <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -222,7 +223,7 @@ window.Quarto = {
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="c3RhdGlzdGljcyUyQ3NpbXVsYXRpb24=" data-listing-file-modified-sort="1749497080707" data-listing-reading-time-sort="16" data-listing-word-count-sort="3173">
+<div class="quarto-post image-right" data-index="0" data-categories="c3RhdGlzdGljcyUyQ3NpbXVsYXRpb24=" data-listing-file-modified-sort="1771186149144" data-listing-reading-time-sort="16" data-listing-word-count-sort="3173">
 <div class="thumbnail"><a href="./posts/percentiles/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/percentiles/image.png" class="thumbnail-image">
@@ -251,7 +252,37 @@ Michał Wypych
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="YXBwcyUyQ2dhbWVz" data-listing-date-sort="1692316800000" data-listing-file-modified-sort="1749497080693" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="31" data-listing-word-count-sort="6023">
+<div class="quarto-post image-right" data-index="1" data-categories="ZGF0YXZpeg==" data-listing-date-sort="NaN" data-listing-file-modified-sort="1771186149142" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="25" data-listing-word-count-sort="4940">
+<div class="thumbnail"><a href="./posts/garmin_viz/index.html" class="no-external">
+
+<img loading="lazy" src="./posts/garmin_viz/image.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/garmin_viz/index.html" class="no-external">Recreating garmin data viz in R</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZGF0YXZpeg=='); return false;">dataviz</div>
+
+</div>
+<div class="delink listing-description"><a href="./posts/garmin_viz/index.html" class="no-external">
+I recently got my first garmin watch and I’m fascinated by the dataviz aspect of it. If you haven’t heard about it, Garmin is a brand of sports watches that allows you to…
+</a></div>
+</div>
+<div class="metadata">
+<a href="./posts/garmin_viz/index.html" class="no-external">
+<div class="listing-date">
+Invalid Date
+</div>
+<div class="listing-author">
+Michał Wypych
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="2" data-categories="YXBwcyUyQ2dhbWVz" data-listing-date-sort="1692316800000" data-listing-file-modified-sort="1771186149120" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="31" data-listing-word-count-sort="6023">
 <div class="thumbnail"><a href="./posts/first-game-2/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/first-game-2/image.jpg" class="thumbnail-image">
@@ -283,7 +314,7 @@ Michał Wypych
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-categories="YXBwcyUyQ2dhbWVz" data-listing-date-sort="1691625600000" data-listing-file-modified-sort="1749497080705" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="39" data-listing-word-count-sort="7747">
+<div class="quarto-post image-right" data-index="3" data-categories="YXBwcyUyQ2dhbWVz" data-listing-date-sort="1691625600000" data-listing-file-modified-sort="1771186149131" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="39" data-listing-word-count-sort="7747">
 <div class="thumbnail"><a href="./posts/first-game/index.html" class="no-external">
 
 <img loading="lazy" src="./posts/first-game/image.jpg" class="thumbnail-image">
@@ -369,13 +400,14 @@ Michał Wypych
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
